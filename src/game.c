@@ -62,12 +62,31 @@ void writeTrack(char *filename, List *TrackNotes )
 	{
 		Entity *f;
 		f = TrackNotes->elements[i].data;
-		fprintf_s(file, "%f %f\n", f->position.x, f->position.y);
+		fprintf_s(file, "%i\n%i\n", (int)f->position.x, (int)f->position.y);
 	}
 
 	fclose(file);
 }
 
+void loadTrack(char *filename, List *TrackNotes)
+{
+	FILE *file;
+	file = fopen(filename, "r");
+	double x;
+	double y;
+	if (!file)
+	{
+		return;
+	}
+	while (!feof(file))
+	{
+		fscanf(file, "%d", &x);
+		fscanf(file, "%d", &y);
+		slog("%d", x);
+		slog("%d", y);
+	}
+	fclose(file);
+}
 
 int main(int argc, char * argv[])
 {
@@ -190,7 +209,7 @@ int main(int argc, char * argv[])
 		// Draw entities
 		//jeff
 		//collision beteen fret and player
-		hitNote(track, player);
+		//hitNote(track, player);
 
 		if (gf2d_input_key_pressed(" "))
 		{
@@ -199,6 +218,10 @@ int main(int argc, char * argv[])
 		if (gf2d_input_key_pressed("9"))
 		{
 			writeTrack("track1", track);
+		}
+		if (gf2d_input_key_pressed("8"))
+		{
+			loadTrack("track1", track);
 		}
 		
 
