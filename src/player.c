@@ -19,12 +19,6 @@ Entity *player_get()
 	return _player;
 }
 
-void UpdateScore()
-{
-	
-}
-
-
 void player_set_position(Vector2D position)
 {
 	if (!_player)
@@ -106,18 +100,25 @@ void player_update(Entity *self)
 	const Uint8 *keys;
 	keys = SDL_GetKeyboardState(NULL);
 
-	if (gf2d_input_key_pressed("a") && playerData.currentLane != TOP)
+	if (gf2d_input_key_pressed("a"))
 	{
 		gf2d_sound_play(self->sound[0], 0, .5, -1, -1);
 		playerData.currentLane += 1;
-		self->position.x -= 200;
+		self->position.x = 400;
 		vector2d_copy(self->body.position, self->position);
 	}
-	if (gf2d_input_key_pressed("d") && playerData.currentLane != BOT)
+	if (gf2d_input_key_pressed("s"))
 	{
 		gf2d_sound_play(self->sound[0], 0, .5, -1, -1);
 		playerData.currentLane -= 1;
-		self->position.x += 200;
+		self->position.x = 600;
+		vector2d_copy(self->body.position, self->position);
+	}
+	if (gf2d_input_key_pressed("d"))
+	{
+		gf2d_sound_play(self->sound[0], 0, .5, -1, -1);
+		playerData.currentLane -= 1;
+		self->position.x = 800;
 		vector2d_copy(self->body.position, self->position);
 	}
 }

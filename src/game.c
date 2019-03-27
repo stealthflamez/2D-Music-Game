@@ -20,6 +20,13 @@
 
 static int _done = 0;
 static Window *_quit = NULL;
+static float hideText = 0;
+static int level = 0;
+static int tracknum = 0;
+static Entity *player;
+static List *track = NULL;
+static Mix_Music *music;
+static int mode = 0;
 
 void onCancel(void *data)
 {
@@ -30,6 +37,7 @@ void onExit(void *data)
 	_done = 1;
 	_quit = NULL;
 }
+
 void hitNote(List *track, Entity *player)
 {
 	if (gf2d_input_key_pressed(" "))
@@ -50,7 +58,7 @@ void hitNote(List *track, Entity *player)
 	}
 }
 
-void writeTrack(char *filename, List *TrackNotes )
+void writeTrackToFile(char *filename, List *track)
 {
 	FILE *file;
 	file = fopen(filename, "w");
@@ -58,34 +66,133 @@ void writeTrack(char *filename, List *TrackNotes )
 	{
 		return;
 	}
-	for (int i = 0; i < TrackNotes->count; i++)
+	for (int i = 0; i < track->count; i++)
 	{
 		Entity *f;
-		f = TrackNotes->elements[i].data;
+		f = track->elements[i].data;
 		fprintf_s(file, "%i\n%i\n", (int)f->position.x, (int)f->position.y);
 	}
 
 	fclose(file);
 }
 
-void loadTrack(char *filename, List *TrackNotes)
+void writeTrack(List *track)
+{
+	if (gf2d_input_key_pressed("1"))
+	{
+		track = gf2d_list_append(track, (fret_new(vector2d(600, 650), "fretR")));
+	}/*
+	else if (gf2d_input_key_pressed("2"))
+	{
+		track = loadTrackFromFile("track1");
+	}*/
+	else if (gf2d_input_key_pressed("z"))
+	{
+		track = gf2d_list_append(track, (fret_new(vector2d(400, 650), "fretR")));
+	}
+	else if (gf2d_input_key_pressed("x"))
+	{
+		track = gf2d_list_append(track, (fret_new(vector2d(600, 650), "fretR")));
+	}
+	else if (gf2d_input_key_pressed("c"))
+	{
+		track = gf2d_list_append(track, (fret_new(vector2d(800, 650), "fretR")));
+	}
+	else if (gf2d_input_key_pressed("9"))
+	{
+		writeTrackToFile("track1", track);
+	}
+}
+
+List *loadTrackFromFile(char *filename)
 {
 	FILE *file;
 	file = fopen(filename, "r");
-	double x;
-	double y;
+	List *track = NULL;
+	track = gf2d_list_new_size(500);
+	int x;
+	int y;
+	int i;
+	int offset;
 	if (!file)
 	{
 		return;
 	}
+	fscanf(file, "%i", &x);
+	fscanf(file, "%i", &offset);
 	while (!feof(file))
 	{
-		fscanf(file, "%d", &x);
-		fscanf(file, "%d", &y);
-		slog("%d", x);
-		slog("%d", y);
+		fscanf(file, "%i", &x);
+		fscanf(file, "%i", &y);
+		slog("%i", x);
+		slog("%i", y);
+		track = gf2d_list_append(track, fret_new(vector2d(x, y - offset), "fretR"));
 	}
 	fclose(file);
+	return track;
+}
+
+int setupLevel(int tracknum)
+{
+	//
+	player = player_new(vector2d(600, 650));
+
+	switch (tracknum)
+	{
+	case 1:
+		music = Mix_LoadMUS("music/track1.mp3");
+		track = loadTrackFromFile("track1");
+		Mix_PlayMusic(music, -1);
+		mode++;
+		break;
+	case 2:
+		music = Mix_LoadMUS("music/track2.mp3");
+		track = loadTrackFromFile("track2");
+		Mix_PlayMusic(music, -1);
+		mode++;
+		break;
+	default:
+		slog("error on track");
+		break;
+	}
+}
+
+void Menu()
+{
+	switch (level)
+	{
+		case 0:
+			gf2d_text_draw_line("Tracks", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 0));
+			gf2d_text_draw_line("1:)Lil Jon(Get Low) vs. 50 Cent(In Da Club)", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 100));
+			gf2d_text_draw_line("2:)Love Is Gone vs. Black & Gold", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 200));
+			if (gf2d_input_key_pressed("1"))
+			{
+				level++;
+				tracknum = 1;
+			}
+			else if (gf2d_input_key_pressed("2"))
+			{
+				level++;
+				tracknum = 2;
+			}
+			break;
+		case 1:
+			gf2d_text_draw_line("1:)PLay song", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 0));
+			gf2d_text_draw_line("2:)Write song", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 100));
+			if (gf2d_input_key_pressed("1"))
+			{
+				level++;
+				setupLevel(tracknum);
+			}
+			else if (gf2d_input_key_pressed("2"))
+			{
+				level++;
+			}
+		case 2:
+
+	default:
+		break;
+	}
 }
 
 int main(int argc, char * argv[])
@@ -95,12 +202,14 @@ int main(int argc, char * argv[])
 	int fullscreen = 0;
 	Sprite *background = NULL;
 
-	//jeff
-	Entity *player;
+	
 	const Uint8 * keys;
 	Space *space = NULL;
-	Mix_Music *music;
-	//Collision *col;
+
+	//basic setup
+	
+
+	//player = player_new(vector2d(600, 650));
 
 	/*parse args*/
 	for (i = 1; i < argc; i++)
@@ -141,47 +250,7 @@ int main(int argc, char * argv[])
 	);
 
 	SDL_ShowCursor(SDL_DISABLE);
-	// game specific setup
-	//jeff
-	space = gf2d_space_new_full(
-		3,
-		gf2d_rect(0, 0, 1200, 700),
-		0.1,
-		vector2d(0, 0, 1),
-		1,
-		20);
-
-	player = player_new(vector2d(600, 650));	
-	gf2d_space_add_body(space, &player->body);
-
-	music = Mix_LoadMUS("music/track1.mp3");
-	Mix_PlayMusic(music, -1);
-	//	Entity *track[500];
-	List *track = NULL;
-	track = gf2d_list_new();
-
-	////writes fret to track
-
-	//for (int i = 0; i <= 10; i++)
-	//{
-	//	slog("%i", i);
-	//	track = gf2d_list_append(track, fret_new(vector2d(1200 + i * 75, 160), "fretR"));
-	//}
-
-	// middle track
-	//for ( i = 0 ; i <= 10 ; i++)
-	//{
-	//	slog("%i",i);
-	//	track[i] = fret_new(vector2d(1000 + i * 100, 360), "fretG");
-	//	gf2d_space_add_body(space, &track[i]->body);
-	//}
-	//// bottom track
-	//for (i = 0; i <= 10; i++)
-	//{
-	//	slog("%i", i);
-	//	track[i] = fret_new(vector2d(700 + i * 25, 560), "fretB");
-	//	gf2d_space_add_body(space, &track[i]->body);
-	//}
+	
 	// init mouse, editor window
 	gf2d_mouse_load("actors/mouse.actor");
 	int frame = 0;
@@ -198,49 +267,28 @@ int main(int argc, char * argv[])
 		gf2d_space_update(space);
 		gf2d_entity_think_all();
 		gf2d_mouse_update();
-		
+
 		gf2d_graphics_clear_screen();// clears drawing buffers
 		// all drawing should happen betweem clear_screen and next_frame
 			//backgrounds drawn first
 		gf2d_sprite_draw(background, vector2d(0, 0), scale,NULL, NULL, NULL, NULL,(frame/10)%71);
 		frame++;
 		// DRAW WORLD
+		if (mode)
+			hitNote(track, player);
 		gf2d_entity_update_all();
-		// Draw entities
-		//jeff
-		//collision beteen fret and player
-		//hitNote(track, player);
-
-		if (gf2d_input_key_pressed(" "))
-		{
-			track = gf2d_list_append(track, (fret_new(player->position, "fretR")));
-		}
-		if (gf2d_input_key_pressed("9"))
-		{
-			writeTrack("track1", track);
-		}
-		if (gf2d_input_key_pressed("8"))
-		{
-			loadTrack("track1", track);
-		}
-		
-
-		//slog("%i", gf2d_body_body_collide(&player->body, base	));
-		gf2d_body_draw(&player->body, vector2d(0, 0));
-		 //gf2d_shape_draw(player->shape, gf2d_color(255, 255, 0, 255), player->position);
-		 //gf2d_shape_draw(fret->shape, gf2d_color(255, 255, 0, 255), fret->position);
-		
+		// Draw entities		
 		gf2d_entity_draw_all();
 		//UI elements last
 		gf2d_windows_draw_all();
 		gf2d_mouse_draw();
+		Menu();
 		gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
 
 		if ((gf2d_input_command_down("exit")) && (_quit == NULL))
 		{
 			_quit = window_yes_no("Exit?", onExit, onCancel, NULL, NULL);
 		}
-		//     slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
 	}
 	Mix_HaltMusic();
 	Mix_FreeMusic(music);

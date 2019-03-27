@@ -1,13 +1,13 @@
 #include "level.h"
 #include "camera.h"
-//#include "spawn.h"
 #include "player.h"
-//#include "entity_common.h"
 #include "simple_json.h"
 #include "simple_logger.h"
 #include "gf2d_graphics.h"
 #include "gf2d_particles.h"
 #include "gf2d_config.h"
+#include "windows_common.h"
+#include "gf2d_input.h"
 #include <stdio.h>
 
 typedef struct
@@ -80,16 +80,16 @@ void level_make_space()
 
 void level_setup() 
 {
-	Entity *player;
-	Entity *fret;
+	
+
 	level_make_space();
-	player = player_new(vector2d(150, 360));
-	fret = fret_new(vector2d(1200, 360));
-	gf2d_space_add_body(gamelevel.space, &player->body);
-	gf2d_space_add_body(gamelevel.space, &fret->body);
+	//music = Mix_LoadMUS("music/track2.mp3");
+	//Mix_HaltMusic();
+	//Mix_FreeMusic(music);
 }
 
-Space *level_get_space()
-{
-	return gamelevel.space;
-}
+
+
+
+
+
