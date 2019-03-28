@@ -1,24 +1,4 @@
-
-#include <SDL.h>
-#include <stdio.h>
-#include "gf2d_graphics.h"
-#include "gf2d_sprite.h"
-#include "gf2d_list.h"
-#include "gf2d_input.h"
-#include "gf2d_audio.h"
-#include "gf2d_windows.h"
-#include "gf2d_entity.h"
-#include "gf2d_mouse.h"
-#include "simple_logger.h"
-#include "windows_common.h"
-#include "gf2d_space.h"
-#include <stdlib.h>
-#include <string.h>
-#include "gf2d_particles.h"
-
-//jeff
-#include "player.h"
-#include "fret.h"
+#include "game.h"
 
 static int _done = 0;
 static Window *_quit = NULL;
@@ -94,7 +74,6 @@ void hitNote(List *track, Entity *player)
 	}
 }
 
-
 void writeTrackToFile(char *filename, List *track)
 {
 	FILE *file;
@@ -119,8 +98,7 @@ void SaveHighScore()
 	char buf[33];
 	itoa(tracknum, buf, 10);
 	char* trackname = concat("HighScore for track ", buf);
-	writeTrackToFile(trackname, track);
-	file = fopen(trackname, "w");
+	file = fopen(trackname, "a");
 	if (!file)
 	{
 		return;
@@ -180,7 +158,7 @@ List *loadTrackFromFile(char *filename)
 	return track;
 }
 
-int setupLevel(int tracknum)
+void setupLevel(int tracknum)
 {
 	player = player_new(vector2d(600, 650));
 	
@@ -189,14 +167,14 @@ int setupLevel(int tracknum)
 	case 1:
 		music = Mix_LoadMUS("music/track1.mp3");
 		track = loadTrackFromFile("track1");
-		Mix_PlayMusic(music, -1);
+		Mix_PlayMusic(music, 0);
 		endtime = SDL_GetTicks() + 290000;
 		mode++;
 		break;
 	case 2:
 		music = Mix_LoadMUS("music/track2.mp3");
 		track = loadTrackFromFile("track2");
-		Mix_PlayMusic(music, -1);
+		Mix_PlayMusic(music, 0);
 		endtime = SDL_GetTicks()+ 212000;
 		mode++;
 		break;
@@ -206,14 +184,14 @@ int setupLevel(int tracknum)
 	}
 }
 
-int setupWriteLevel(int tracknum)
+void setupWriteLevel(int tracknum)
 {
 	player = player_new(vector2d(600, 650));
 	switch (tracknum)
 	{
 	case 1:
 		music = Mix_LoadMUS("music/track1.mp3");
-		Mix_PlayMusic(music, -1);
+		Mix_PlayMusic(music, 0);
 		gf2d_list_delete(track);
 		track = gf2d_list_new_size(500);
 		track = gf2d_list_append(track, (fret_new(vector2d(600, 650), "fretR")));
@@ -222,7 +200,7 @@ int setupWriteLevel(int tracknum)
 		break;
 	case 2:
 		music = Mix_LoadMUS("music/track2.mp3");
-		Mix_PlayMusic(music, -1);
+		Mix_PlayMusic(music, 0);
 		gf2d_list_delete(track);
 		track = gf2d_list_new_size(500);
 		track = gf2d_list_append(track, (fret_new(vector2d(600, 650), "fretR")));

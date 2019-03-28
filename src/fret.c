@@ -2,11 +2,9 @@
 #include "simple_logger.h"
 #include <stdlib.h>
 #include <string.h>
+#include "fret.h"
 
 static Entity *_fret = NULL;
-
-void fret_update(Entity *self);
-int  fret_touch(Entity *self, Entity *other);
 
 Entity *fret_new(Vector2D position, char *type)
 {

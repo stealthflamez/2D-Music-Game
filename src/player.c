@@ -8,27 +8,9 @@
 
 static Entity *_player = NULL;
 
-void player_update(Entity *self);
-
 static PlayerData playerData = {
 	MID
 };
-
-Entity *player_get()
-{
-	return _player;
-}
-
-void player_set_position(Vector2D position)
-{
-	if (!_player)
-	{
-		slog("no player loaded");
-		return;
-	}
-	vector2d_copy(_player->position, position);
-	vector2d_copy(_player->body.position, position);
-}
 
 Entity *player_new(Vector2D position)
 {

@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\include\camera.h" />
     <ClInclude Include="..\..\include\fret.h" />
+    <ClInclude Include="..\..\include\game.h" />
     <ClInclude Include="..\..\include\gf2d_actor.h" />
     <ClInclude Include="..\..\include\gf2d_audio.h" />
     <ClInclude Include="..\..\include\gf2d_body.h" />
