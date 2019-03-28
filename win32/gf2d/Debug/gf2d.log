@@ -1,0 +1,10 @@
+﻿  simple_json.c
+  simple_json_array.c
+  simple_json_error.c
+  simple_json_list.c
+  simple_json_object.c
+  simple_json_parse.c
+  simple_json_string.c
+  Generating Code...
+gf2d_config.obj : error LNK2019: unresolved external symbol _sscanf referenced in function _sj_value_as_vector2d
+..\..\gf2d.exe : fatal error LNK1120: 1 unresolved externals

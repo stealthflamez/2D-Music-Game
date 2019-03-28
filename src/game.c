@@ -12,11 +12,13 @@
 #include "simple_logger.h"
 #include "windows_common.h"
 #include "gf2d_space.h"
+#include <stdlib.h>
+#include <string.h>
+#include "gf2d_particles.h"
 
 //jeff
 #include "player.h"
 #include "fret.h"
-#include "level.h"
 
 static int _done = 0;
 static Window *_quit = NULL;
@@ -27,6 +29,9 @@ static Entity *player;
 static List *track = NULL;
 static Mix_Music *music;
 static int mode = 0;
+static int endtime = 0;
+static ParticleEmitter *pe;
+
 
 void onCancel(void *data)
 {
@@ -37,7 +42,37 @@ void onExit(void *data)
 	_done = 1;
 	_quit = NULL;
 }
-
+void hitNoteFX()
+{
+	Shape shape;
+	shape = gf2d_shape_circle(0, 0, 8);
+	pe = gf2d_particle_emitter_new_full(
+		10,
+		100,
+		5,
+		PT_Shape,
+		player->body.position,
+		vector2d(2, 2),
+		vector2d(0, -3),
+		vector2d(2, 1),
+		vector2d(0, 0.05),
+		vector2d(0, 0.01),
+		gf2d_color(0.85, 0.55, 0, 1),
+		gf2d_color(-0.01, -0.02, 0, 0),
+		gf2d_color(0.1, 0.1, 0, 0.1),
+		&shape,
+		0,
+		0,
+		0,
+		"images/flameP.png",
+		260,
+		276,
+		1,
+		1,
+		//        SDL_BLENDMODE_BLEND);
+		SDL_BLENDMODE_ADD);
+	gf2d_particle_new_default(pe, 20);
+}
 void hitNote(List *track, Entity *player)
 {
 	if (gf2d_input_key_pressed(" "))
@@ -49,6 +84,7 @@ void hitNote(List *track, Entity *player)
 			if (gf2d_body_body_collide(&player->body, &f->body))
 			{
 				slog("hit");
+				hitNoteFX();
 				score += 100;
 				gf2d_entity_free(track->elements[i].data);
 				gf2d_list_delete_nth(track, i);
@@ -57,6 +93,7 @@ void hitNote(List *track, Entity *player)
 		}
 	}
 }
+
 
 void writeTrackToFile(char *filename, List *track)
 {
@@ -76,17 +113,25 @@ void writeTrackToFile(char *filename, List *track)
 	fclose(file);
 }
 
+void SaveHighScore()
+{
+	FILE *file;
+	char buf[33];
+	itoa(tracknum, buf, 10);
+	char* trackname = concat("HighScore for track ", buf);
+	writeTrackToFile(trackname, track);
+	file = fopen(trackname, "w");
+	if (!file)
+	{
+		return;
+	}
+	fprintf_s(file, "%i\n", score);
+	fclose(file);
+}
+
 void writeTrack(List *track)
 {
-	if (gf2d_input_key_pressed("1"))
-	{
-		track = gf2d_list_append(track, (fret_new(vector2d(600, 650), "fretR")));
-	}/*
-	else if (gf2d_input_key_pressed("2"))
-	{
-		track = loadTrackFromFile("track1");
-	}*/
-	else if (gf2d_input_key_pressed("z"))
+	if (gf2d_input_key_pressed("z"))
 	{
 		track = gf2d_list_append(track, (fret_new(vector2d(400, 650), "fretR")));
 	}
@@ -100,7 +145,10 @@ void writeTrack(List *track)
 	}
 	else if (gf2d_input_key_pressed("9"))
 	{
-		writeTrackToFile("track1", track);
+		char buf[33];
+		itoa(tracknum, buf, 10);
+		char* trackname = concat("track", buf);
+		writeTrackToFile(trackname, track);
 	}
 }
 
@@ -134,22 +182,52 @@ List *loadTrackFromFile(char *filename)
 
 int setupLevel(int tracknum)
 {
-	//
 	player = player_new(vector2d(600, 650));
-
+	
 	switch (tracknum)
 	{
 	case 1:
 		music = Mix_LoadMUS("music/track1.mp3");
 		track = loadTrackFromFile("track1");
 		Mix_PlayMusic(music, -1);
+		endtime = SDL_GetTicks() + 290000;
 		mode++;
 		break;
 	case 2:
 		music = Mix_LoadMUS("music/track2.mp3");
 		track = loadTrackFromFile("track2");
 		Mix_PlayMusic(music, -1);
+		endtime = SDL_GetTicks()+ 212000;
 		mode++;
+		break;
+	default:
+		slog("error on track");
+		break;
+	}
+}
+
+int setupWriteLevel(int tracknum)
+{
+	player = player_new(vector2d(600, 650));
+	switch (tracknum)
+	{
+	case 1:
+		music = Mix_LoadMUS("music/track1.mp3");
+		Mix_PlayMusic(music, -1);
+		gf2d_list_delete(track);
+		track = gf2d_list_new_size(500);
+		track = gf2d_list_append(track, (fret_new(vector2d(600, 650), "fretR")));
+		endtime = SDL_GetTicks() + 290000;
+		mode = 2;
+		break;
+	case 2:
+		music = Mix_LoadMUS("music/track2.mp3");
+		Mix_PlayMusic(music, -1);
+		gf2d_list_delete(track);
+		track = gf2d_list_new_size(500);
+		track = gf2d_list_append(track, (fret_new(vector2d(600, 650), "fretR")));
+		endtime = SDL_GetTicks() + 212000;
+		mode = 2;
 		break;
 	default:
 		slog("error on track");
@@ -187,8 +265,8 @@ void Menu()
 			else if (gf2d_input_key_pressed("2"))
 			{
 				level++;
+				setupWriteLevel(tracknum);
 			}
-		case 2:
 
 	default:
 		break;
@@ -207,6 +285,7 @@ int main(int argc, char * argv[])
 	Space *space = NULL;
 
 	//basic setup
+	
 	
 
 	//player = player_new(vector2d(600, 650));
@@ -271,11 +350,52 @@ int main(int argc, char * argv[])
 		gf2d_graphics_clear_screen();// clears drawing buffers
 		// all drawing should happen betweem clear_screen and next_frame
 			//backgrounds drawn first
-		gf2d_sprite_draw(background, vector2d(0, 0), scale,NULL, NULL, NULL, NULL,(frame/10)%71);
+		gf2d_sprite_draw(background, vector2d(0, 0), scale, NULL, NULL, NULL, NULL, (frame / 10) % 71);
 		frame++;
 		// DRAW WORLD
-		if (mode)
+		if (mode) {
+			
+		}
+		switch (mode)
+		{
+		case 1:
 			hitNote(track, player);
+			gf2d_particle_emitter_update(pe);
+			gf2d_particle_emitter_draw(pe);
+			if (SDL_GetTicks() > endtime)
+			{
+				SaveHighScore();
+				mode = 0;
+				level = 0;
+				Mix_HaltMusic();
+				Mix_FreeMusic(music);
+				score = 0;
+				tracknum = 0;
+				endtime = 0;
+				gf2d_entity_free(player);
+			}
+			break;
+		case 2:
+			writeTrack(track);
+			if (SDL_GetTicks() > endtime)
+			{
+				char buf[33];
+				itoa(tracknum, buf, 10);
+				char* trackname = concat("track", buf);
+				writeTrackToFile(trackname, track);
+				mode = 0;
+				level = 0;
+				Mix_HaltMusic();
+				Mix_FreeMusic(music);
+				score = 0;
+				tracknum = 0;
+				endtime = 0;
+				gf2d_entity_free(player);
+			}
+		default:
+			break;
+		}
+
 		gf2d_entity_update_all();
 		// Draw entities		
 		gf2d_entity_draw_all();
@@ -284,7 +404,6 @@ int main(int argc, char * argv[])
 		gf2d_mouse_draw();
 		Menu();
 		gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
-
 		if ((gf2d_input_command_down("exit")) && (_quit == NULL))
 		{
 			_quit = window_yes_no("Exit?", onExit, onCancel, NULL, NULL);
