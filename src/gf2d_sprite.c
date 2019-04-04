@@ -147,7 +147,7 @@ Sprite *gf2d_sprite_load_all(
     surface = IMG_Load(filename);
     if (!surface)
     {
-        slog("failed to load sprite image %s",filename);
+        slog("failed to load sprite image surface %s",filename);
         gf2d_sprite_free(sprite);
         return NULL;
     }
@@ -155,7 +155,7 @@ Sprite *gf2d_sprite_load_all(
     surface = gf2d_graphics_screen_convert(&surface);
     if (!surface)
     {
-        slog("failed to load sprite image %s",filename);
+        slog("failed to load sprite image convert %s",filename);
         gf2d_sprite_free(sprite);
         return NULL;
     }
@@ -163,7 +163,7 @@ Sprite *gf2d_sprite_load_all(
     sprite->texture = SDL_CreateTextureFromSurface(gf2d_graphics_get_renderer(),surface);
     if (!sprite->texture)
     {
-        slog("failed to load sprite image %s",filename);
+        slog("failed to load sprite image texture %s",filename);
         gf2d_sprite_free(sprite);
         SDL_FreeSurface(surface);
         return NULL;

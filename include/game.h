@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "gf2d_particles.h"
+#include "gf2d_types.h"
 
 #include "player.h"
 #include "fret.h"

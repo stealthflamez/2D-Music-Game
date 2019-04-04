@@ -107,6 +107,7 @@ ParticleEmitter *gf2d_particle_emitter_new_full(
     pe->startFrame = startFrame;
     pe->endFrame = endFrame;
     frameVariance = frameVariance;
+	slog(spriteFile);
     gf2d_line_cpy(pe->spriteFile,spriteFile);
     pe->frameWidth = frameWidth;
     pe->frameHeight = frameHeight;
@@ -331,6 +332,9 @@ void gf2d_particle_draw(Particle *p)
 {
     Vector4D color;
     Shape shape;
+	Vector2D *sc = vector2d_new();
+	sc->x = .8;
+	sc->y = .8;
     if ((!p)||(p->inuse == 0))return;
     switch(p->type)
     {
@@ -353,8 +357,8 @@ void gf2d_particle_draw(Particle *p)
             color = gf2d_color_to_vector4(p->color);
             gf2d_sprite_draw(
                 p->sprite,
-                vector2d(p->position.x - (p->sprite->frame_w/2),p->position.y - (p->sprite->frame_h/2)),
-                NULL,
+                vector2d(p->position.x - (p->sprite->frame_w/2 * sc->x),p->position.y - (p->sprite->frame_h/2* sc->x)),
+				sc,//sorry,
                 NULL,
                 NULL,
                 NULL,
@@ -363,6 +367,7 @@ void gf2d_particle_draw(Particle *p)
             SDL_SetTextureBlendMode(p->sprite->texture,SDL_BLENDMODE_BLEND);
             break;
     }
+	//free(sc);
 }
 
 void gf2d_particle_update(Particle *p,Uint32 now)

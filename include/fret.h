@@ -10,7 +10,7 @@
  * @param what type of fret it is
  * @return NULL on error or a pointer to a Entity
  */
-Entity *fret_new(Vector2D position, char *type);
+Entity *fret_new(Vector2D position, Vector4D colorShift);
 /**
  * @brief Updates fret
  * @param pointer to fret

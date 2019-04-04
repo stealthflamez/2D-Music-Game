@@ -6,10 +6,11 @@
 
 static Entity *_fret = NULL;
 
-Entity *fret_new(Vector2D position, char *type)
+Entity *fret_new(Vector2D position, Vector4D colorShift)
 {
 	Entity *self;
 	self = gf2d_entity_new();
+	
 	if (!self)
 	{
 		slog("failed to allcate a new fret entity");
@@ -18,7 +19,7 @@ Entity *fret_new(Vector2D position, char *type)
 	gf2d_line_cpy(self->name, "fret");
 	self->parent = NULL;
 
-	self->shape = gf2d_shape_rect(-27, -27, 54, 54);
+	self->shape = gf2d_shape_rect(-16, -16, 32, 32);
 	gf2d_body_set(
 		&self->body,
 		"fret",
@@ -34,24 +35,6 @@ Entity *fret_new(Vector2D position, char *type)
 		&self->shape,
 		NULL,
 		NULL);
-	/*
-	char actorType = { 0 };
-	char result = malloc(strlen(actorType) + strlen("actors/") + 1); // +1 for the null-terminator
-	// in real code you would check for errors in malloc here
-	strcpy(result, actorType);
-	strcat(result, "actors/");
-	slog(result);
-	free(actorType);
-	free(result);
-
-
-	actorType = strcat(actorType, "actors/");
-	actorType = strcat(actorType, type);
-	strcat(actorType, ".actor");
-	strcat(actorType, "\0");
-	slog(actorType);
-
-*/
 
 	gf2d_actor_load(&self->actor, "actors/fretR.actor");
 	gf2d_actor_set_action(&self->actor, "idle");
@@ -60,17 +43,12 @@ Entity *fret_new(Vector2D position, char *type)
 	vector2d_copy(self->position, position);
 
 	vector2d_copy(self->scale, self->actor.al->scale);
-	vector2d_set(self->scaleCenter, 27, 27);
-	vector3d_set(self->rotation, 27, 27, 0);
-	vector2d_set(self->flip, 1, 0);
-
-	//self->draw = player_draw;
+	vector2d_set(self->scaleCenter, 32, 32);
+	vector4d_copy(self->actor.color, colorShift);
 	self->update = fret_update;
-	//self->touch = player_touch;
 
 	self->health = self->maxHealth = 100;
 	_fret = self;
-	//level_add_entity(self);
 	return self;
 
 }
@@ -79,6 +57,7 @@ void fret_update(Entity *self)
 {
 	self->position.y += 2;
 	self->body.position = self->position;
+	gf2d_body_draw(&self->body, vector2d(0, 0));
 }
 
 void fret_free(Entity *self)

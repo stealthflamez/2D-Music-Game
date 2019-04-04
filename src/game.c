@@ -26,11 +26,12 @@ void hitNoteFX()
 {
 	Shape shape;
 	shape = gf2d_shape_circle(0, 0, 8);
+
 	pe = gf2d_particle_emitter_new_full(
 		10,
 		100,
 		5,
-		PT_Shape,
+		PT_Sprite,
 		player->body.position,
 		vector2d(2, 2),
 		vector2d(0, -3),
@@ -42,15 +43,16 @@ void hitNoteFX()
 		gf2d_color(0.1, 0.1, 0, 0.1),
 		&shape,
 		0,
-		0,
-		0,
+		1,
+		1,
 		"images/flameP.png",
-		260,
-		276,
-		1,
-		1,
+		81,
+		123,
+		80,
+		60,
 		//        SDL_BLENDMODE_BLEND);
 		SDL_BLENDMODE_ADD);
+	
 	gf2d_particle_new_default(pe, 20);
 }
 void hitNote(List *track, Entity *player)
@@ -111,15 +113,15 @@ void writeTrack(List *track)
 {
 	if (gf2d_input_key_pressed("z"))
 	{
-		track = gf2d_list_append(track, (fret_new(vector2d(400, 650), "fretR")));
+		track = gf2d_list_append(track, (fret_new(vector2d(400, 650), vector4d(255, 0, 0, 255))));
 	}
 	else if (gf2d_input_key_pressed("x"))
 	{
-		track = gf2d_list_append(track, (fret_new(vector2d(600, 650), "fretR")));
+		track = gf2d_list_append(track, (fret_new(vector2d(600, 650), vector4d(255, 0, 0, 255))));
 	}
 	else if (gf2d_input_key_pressed("c"))
 	{
-		track = gf2d_list_append(track, (fret_new(vector2d(800, 650), "fretR")));
+		track = gf2d_list_append(track, (fret_new(vector2d(800, 650), vector4d(255, 0, 0, 255))));
 	}
 	else if (gf2d_input_key_pressed("9"))
 	{
@@ -152,7 +154,12 @@ List *loadTrackFromFile(char *filename)
 		fscanf(file, "%i", &y);
 		slog("%i", x);
 		slog("%i", y);
-		track = gf2d_list_append(track, fret_new(vector2d(x, y - offset), "fretR"));
+		if(x == 400)
+			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset), vector4d(255, 0, 0, 255)));
+		if (x == 600)
+			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset), vector4d(0, 255, 0, 255)));
+		if (x == 800)
+			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset), vector4d(0, 0, 255, 255)));
 	}
 	fclose(file);
 	return track;
@@ -194,7 +201,7 @@ void setupWriteLevel(int tracknum)
 		Mix_PlayMusic(music, 0);
 		gf2d_list_delete(track);
 		track = gf2d_list_new_size(500);
-		track = gf2d_list_append(track, (fret_new(vector2d(600, 650), "fretR")));
+		track = gf2d_list_append(track, (fret_new(vector2d(600, 650), vector4d(255, 0, 0, 255))));
 		endtime = SDL_GetTicks() + 290000;
 		mode = 2;
 		break;
@@ -203,7 +210,7 @@ void setupWriteLevel(int tracknum)
 		Mix_PlayMusic(music, 0);
 		gf2d_list_delete(track);
 		track = gf2d_list_new_size(500);
-		track = gf2d_list_append(track, (fret_new(vector2d(600, 650), "fretR")));
+		track = gf2d_list_append(track, (fret_new(vector2d(600, 650), vector4d(255, 0, 0, 255))));
 		endtime = SDL_GetTicks() + 212000;
 		mode = 2;
 		break;
@@ -263,11 +270,6 @@ int main(int argc, char * argv[])
 	Space *space = NULL;
 
 	//basic setup
-	
-	
-
-	//player = player_new(vector2d(600, 650));
-
 	/*parse args*/
 	for (i = 1; i < argc; i++)
 	{
@@ -299,10 +301,10 @@ int main(int argc, char * argv[])
 
 	camera_set_dimensions(0, 0, 1200, 700);
 	background = gf2d_sprite_load_all(
-		"images/backgrounds/bg.png",
-		435,
-		250,
-		10,
+		"images/backgrounds/bgf.png",
+		600,
+		338,
+		5,
 		false
 	);
 
@@ -313,8 +315,11 @@ int main(int argc, char * argv[])
 	int frame = 0;
 	int loop = 80;
 	Vector2D *scale = vector2d_new();
-	scale->x = 2.75;
-	scale->y = 2.9;
+	scale->x = 2;
+	scale->y = 2.13;
+	Vector4D colorS;
+	vector4d_set(colorS, (float)rand() / (float)255, (float)rand() / (float)255, (float)rand() / (float)255, 255);
+	//ScolorS = ne
 	/*main game loop*/
 	while (!_done)
 	{
@@ -328,12 +333,20 @@ int main(int argc, char * argv[])
 		gf2d_graphics_clear_screen();// clears drawing buffers
 		// all drawing should happen betweem clear_screen and next_frame
 			//backgrounds drawn first
-		gf2d_sprite_draw(background, vector2d(0, 0), scale, NULL, NULL, NULL, NULL, (frame / 10) % 71);
+		
+			//
+		
+		gf2d_sprite_draw(background, vector2d(0, 0), scale, NULL, NULL, NULL, &colorS, (frame / 4) % 80);
+		if (frame > 320)
+		{
+			//vector4d_set(colorS, 50 + rand() % (200 + 1 - 50), 50 + rand() % (200 + 1 - 50), 50 + rand() % (200 + 1 - 50), 255);
+			vector4d_set(colorS, (float)rand() / (float)255, (float)rand() / (float)255, (float)rand() / (float)255, 255);
+			frame = 0;
+		}
+			
 		frame++;
 		// DRAW WORLD
-		if (mode) {
-			
-		}
+		gf2d_entity_draw_all();
 		switch (mode)
 		{
 		case 1:
@@ -376,7 +389,7 @@ int main(int argc, char * argv[])
 
 		gf2d_entity_update_all();
 		// Draw entities		
-		gf2d_entity_draw_all();
+		
 		//UI elements last
 		gf2d_windows_draw_all();
 		gf2d_mouse_draw();
