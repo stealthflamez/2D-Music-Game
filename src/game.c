@@ -88,7 +88,7 @@ void writeTrackToFile(char *filename, List *track)
 	{
 		Entity *f;
 		f = track->elements[i].data;
-		fprintf_s(file, "%i\n%i\n", (int)f->position.x, (int)f->position.y);
+		fprintf_s(file, "%f\n%f\n", f->position.x, f->position.y);
 	}
 
 	fclose(file);
@@ -138,28 +138,28 @@ List *loadTrackFromFile(char *filename)
 	file = fopen(filename, "r");
 	List *track = NULL;
 	track = gf2d_list_new_size(500);
-	int x;
-	int y;
-	int i;
-	int offset;
+	float x;
+	float y;
+	float i;
+	float offset;
 	if (!file)
 	{
 		return;
 	}
-	fscanf(file, "%i", &x);
-	fscanf(file, "%i", &offset);
+	fscanf(file, "%f", &x);
+	fscanf(file, "%f", &offset);
 	while (!feof(file))
 	{
-		fscanf(file, "%i", &x);
-		fscanf(file, "%i", &y);
-		slog("%i", x);
-		slog("%i", y);
+		fscanf(file, "%f", &x);
+		fscanf(file, "%f", &y);
+		slog("%f", x);
+		slog("%f", y);
 		if(x == 400)
-			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset), vector4d(255, 0, 0, 255)));
+			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset + 600), vector4d(255, 0, 0, 255)));
 		if (x == 600)
-			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset), vector4d(0, 255, 0, 255)));
+			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset + 600), vector4d(0, 255, 0, 255)));
 		if (x == 800)
-			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset), vector4d(0, 0, 255, 255)));
+			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset + 600), vector4d(0, 0, 255, 255)));
 	}
 	fclose(file);
 	return track;
@@ -290,7 +290,6 @@ int main(int argc, char * argv[])
 		720,
 		vector4d(0, 0, 0, 255),
 		fullscreen);
-	gf2d_graphics_set_frame_delay(16);
 	gf2d_audio_init(256, 16, 4, 1, 1, 1);
 	gf2d_sprite_init(1024);
 	gf2d_action_list_init(128);
@@ -321,6 +320,7 @@ int main(int argc, char * argv[])
 	vector4d_set(colorS, (float)rand() / (float)255, (float)rand() / (float)255, (float)rand() / (float)255, 255);
 	//ScolorS = ne
 	/*main game loop*/
+	gf2d_graphics_set_frame_delay(16);
 	while (!_done)
 	{
 		gf2d_input_update();
@@ -333,8 +333,6 @@ int main(int argc, char * argv[])
 		gf2d_graphics_clear_screen();// clears drawing buffers
 		// all drawing should happen betweem clear_screen and next_frame
 			//backgrounds drawn first
-		
-			//
 		
 		gf2d_sprite_draw(background, vector2d(0, 0), scale, NULL, NULL, NULL, &colorS, (frame / 4) % 80);
 		if (frame > 320)
@@ -394,6 +392,8 @@ int main(int argc, char * argv[])
 		gf2d_windows_draw_all();
 		gf2d_mouse_draw();
 		Menu();
+		slog("%f", gf2d_graphics_get_frame_diff());
+		//slog("%f", gf2d_graphics_get_frames_per_second());
 		gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
 		if ((gf2d_input_command_down("exit")) && (_quit == NULL))
 		{

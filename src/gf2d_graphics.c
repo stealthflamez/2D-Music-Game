@@ -17,7 +17,8 @@ typedef struct
     Uint32 now;
     Uint32 then;
     Bool print_fps;
-    float fps; 
+    float fps;
+	float fpsMod;
 
     Uint32 background_color;
     Vector4D background_color_v;
@@ -33,6 +34,8 @@ typedef struct
 
 /*local gobals*/
 static Graphics gf2d_graphics;
+#define SCREEN_FPS  60;
+const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
 
 /*forward declarations*/
 void gf2d_graphics_close();
@@ -191,7 +194,10 @@ float gf2d_graphics_get_frames_per_second()
 {
     return gf2d_graphics.fps;
 }
-
+float gf2d_graphics_get_frame_diff()
+{
+	return gf2d_graphics.fpsMod;
+}
 Vector2D gf2d_graphics_get_resolution()
 {
     return vector2d(gf2d_graphics.renderWidth,gf2d_graphics.renderHeight);
@@ -199,17 +205,20 @@ Vector2D gf2d_graphics_get_resolution()
 
 void gf2d_graphics_frame_delay()
 {
+	/*
     Uint32 diff;
     gf2d_graphics.then = gf2d_graphics.now;
     slog_sync();// make sure logs get written when we have time to write it
     gf2d_graphics.now = SDL_GetTicks();
     diff = (gf2d_graphics.now - gf2d_graphics.then);
+	gf2d_graphics.fpsMod = diff / gf2d_graphics.frame_delay;
     if (diff < gf2d_graphics.frame_delay)
     {
         SDL_Delay(gf2d_graphics.frame_delay - diff);
     }
     gf2d_graphics.fps = 1000.0/MAX(SDL_GetTicks() - gf2d_graphics.then,0.001);
-}
+	*/
+	}
 
 void gf2d_grahics_next_frame()
 {

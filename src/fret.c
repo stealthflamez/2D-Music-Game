@@ -2,6 +2,7 @@
 #include "simple_logger.h"
 #include <stdlib.h>
 #include <string.h>
+#include "gf2d_graphics.h"
 #include "fret.h"
 
 static Entity *_fret = NULL;
@@ -55,7 +56,8 @@ Entity *fret_new(Vector2D position, Vector4D colorShift)
 
 void fret_update(Entity *self)
 {
-	self->position.y += 2;
+	if (!(int)gf2d_graphics_get_frame_diff())
+		self->position.y += 2;
 	self->body.position = self->position;
 	gf2d_body_draw(&self->body, vector2d(0, 0));
 }
