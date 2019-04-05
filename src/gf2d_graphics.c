@@ -36,7 +36,8 @@ typedef struct
 static Graphics gf2d_graphics;
 #define SCREEN_FPS  60;
 const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
-
+int countedFrames = 0;
+float avgFPS;
 /*forward declarations*/
 void gf2d_graphics_close();
 
@@ -205,6 +206,18 @@ Vector2D gf2d_graphics_get_resolution()
 
 void gf2d_graphics_frame_delay()
 {
+	gf2d_graphics.now = SDL_GetTicks();
+	countedFrames++;
+	if (SDL_GetTicks() < SCREEN_TICKS_PER_FRAME)
+	{
+		SDL_Delay(SCREEN_TICKS_PER_FRAME - SDL_GetTicks());
+	}
+	avgFPS = countedFrames / (SDL_GetTicks() / 1000.f);
+	if (avgFPS > 2000000)
+	{
+		avgFPS = 0;
+	}
+	//slog("%f", avgFPS);
 	/*
     Uint32 diff;
     gf2d_graphics.then = gf2d_graphics.now;

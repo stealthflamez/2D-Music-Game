@@ -155,11 +155,11 @@ List *loadTrackFromFile(char *filename)
 		slog("%f", x);
 		slog("%f", y);
 		if(x == 400)
-			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset + 600), vector4d(255, 0, 0, 255)));
+			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset), vector4d(255, 0, 0, 255)));
 		if (x == 600)
-			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset + 600), vector4d(0, 255, 0, 255)));
+			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset), vector4d(0, 255, 0, 255)));
 		if (x == 800)
-			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset + 600), vector4d(0, 0, 255, 255)));
+			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset), vector4d(0, 0, 255, 255)));
 	}
 	fclose(file);
 	return track;
@@ -320,7 +320,7 @@ int main(int argc, char * argv[])
 	vector4d_set(colorS, (float)rand() / (float)255, (float)rand() / (float)255, (float)rand() / (float)255, 255);
 	//ScolorS = ne
 	/*main game loop*/
-	gf2d_graphics_set_frame_delay(16);
+	//gf2d_graphics_set_frame_delay(16);
 	while (!_done)
 	{
 		gf2d_input_update();
@@ -334,8 +334,8 @@ int main(int argc, char * argv[])
 		// all drawing should happen betweem clear_screen and next_frame
 			//backgrounds drawn first
 		
-		gf2d_sprite_draw(background, vector2d(0, 0), scale, NULL, NULL, NULL, &colorS, (frame / 4) % 80);
-		if (frame > 320)
+		gf2d_sprite_draw(background, vector2d(0, 0), scale, NULL, NULL, NULL, &colorS, (frame / 3) % 80);
+		if (frame > 240)
 		{
 			//vector4d_set(colorS, 50 + rand() % (200 + 1 - 50), 50 + rand() % (200 + 1 - 50), 50 + rand() % (200 + 1 - 50), 255);
 			vector4d_set(colorS, (float)rand() / (float)255, (float)rand() / (float)255, (float)rand() / (float)255, 255);
@@ -392,7 +392,7 @@ int main(int argc, char * argv[])
 		gf2d_windows_draw_all();
 		gf2d_mouse_draw();
 		Menu();
-		slog("%f", gf2d_graphics_get_frame_diff());
+		//slog("%f", gf2d_graphics_get_frame_diff());
 		//slog("%f", gf2d_graphics_get_frames_per_second());
 		gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
 		if ((gf2d_input_command_down("exit")) && (_quit == NULL))
