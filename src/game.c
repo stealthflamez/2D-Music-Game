@@ -346,7 +346,7 @@ int main(int argc, char * argv[])
 	vector4d_set(colorS, (float)rand() / (float)255, (float)rand() / (float)255, (float)rand() / (float)255, 255);
 	//ScolorS = ne
 	/*main game loop*/
-	gf2d_graphics_set_frame_delay(16);
+	//gf2d_graphics_set_frame_delay(16);
 	while (!_done)
 	{
 		gf2d_input_update();
@@ -417,7 +417,7 @@ int main(int argc, char * argv[])
 		gf2d_windows_draw_all();
 		gf2d_mouse_draw();
 		Menu();
-		slog("%f", gf2d_graphics_get_frame_diff());
+		//slog("%f", gf2d_graphics_get_frame_diff());
 		//slog("%f", gf2d_graphics_get_frames_per_second());
 		gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
 		if ((gf2d_input_command_down("exit")) && (_quit == NULL))
