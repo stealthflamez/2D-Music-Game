@@ -36,7 +36,7 @@ Entity *fret_new(Vector2D position, Vector4D colorShift)
 		&self->shape,
 		NULL,
 		NULL);
-
+	
 	gf2d_actor_load(&self->actor, "actors/fretR.actor");
 	gf2d_actor_set_action(&self->actor, "idle");
 	//self->sound[0] = gf2d_sound_load("sounds/laneSwitch1.wav", 1, -1);

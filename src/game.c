@@ -155,11 +155,11 @@ List *loadTrackFromFile(char *filename)
 		slog("%f", x);
 		slog("%f", y);
 		if(x == 400)
-			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset), vector4d(255, 0, 0, 255)));
+			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset + 600), vector4d(255, 0, 0, 255)));
 		if (x == 600)
-			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset), vector4d(0, 255, 0, 255)));
+			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset + 600), vector4d(0, 255, 0, 255)));
 		if (x == 800)
-			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset), vector4d(0, 0, 255, 255)));
+			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset + 600), vector4d(0, 0, 255, 255)));
 	}
 	fclose(file);
 	return track;
@@ -185,6 +185,14 @@ void setupLevel(int tracknum)
 		endtime = SDL_GetTicks()+ 212000;
 		mode++;
 		break;
+	case 3:
+		music = Mix_LoadMUS("music/track3.mp3");
+		track = loadTrackFromFile("track3");
+		Mix_PlayMusic(music, 0);
+		endtime = SDL_GetTicks() + 62000;
+		mode++;
+		break;
+
 	default:
 		slog("error on track");
 		break;
@@ -214,6 +222,15 @@ void setupWriteLevel(int tracknum)
 		endtime = SDL_GetTicks() + 212000;
 		mode = 2;
 		break;
+	case 3:
+		music = Mix_LoadMUS("music/track3.mp3");
+		Mix_PlayMusic(music, 0);
+		gf2d_list_delete(track);
+		track = gf2d_list_new_size(500);
+		track = gf2d_list_append(track, (fret_new(vector2d(600, 650), vector4d(255, 0, 0, 255))));
+		endtime = SDL_GetTicks() + 62000;
+		mode = 2;
+		break;
 	default:
 		slog("error on track");
 		break;
@@ -226,8 +243,9 @@ void Menu()
 	{
 		case 0:
 			gf2d_text_draw_line("Tracks", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 0));
-			gf2d_text_draw_line("1:)Lil Jon(Get Low) vs. 50 Cent(In Da Club)", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 100));
-			gf2d_text_draw_line("2:)Love Is Gone vs. Black & Gold", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 200));
+			gf2d_text_draw_line("1)Lil Jon(Get Low) vs. 50 Cent(In Da Club)", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 100));
+			gf2d_text_draw_line("2)Love Is Gone vs. Black & Gold", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 200));
+			gf2d_text_draw_line("3)track 3", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 300));
 			if (gf2d_input_key_pressed("1"))
 			{
 				level++;
@@ -237,6 +255,11 @@ void Menu()
 			{
 				level++;
 				tracknum = 2;
+			}
+			else if (gf2d_input_key_pressed("3"))
+			{
+				level++;
+				tracknum = 3;
 			}
 			break;
 		case 1:
@@ -314,13 +337,16 @@ int main(int argc, char * argv[])
 	int frame = 0;
 	int loop = 80;
 	Vector2D *scale = vector2d_new();
-	scale->x = 2;
-	scale->y = 2.13;
+	Vector2D *scaleC = vector2d_new();
+	scale->x = 2 * 1.5;
+	scale->y = 2.13 * 1.5;
+	scaleC->x = 300;
+	scaleC->y = 169;
 	Vector4D colorS;
 	vector4d_set(colorS, (float)rand() / (float)255, (float)rand() / (float)255, (float)rand() / (float)255, 255);
 	//ScolorS = ne
 	/*main game loop*/
-	//gf2d_graphics_set_frame_delay(16);
+	gf2d_graphics_set_frame_delay(16);
 	while (!_done)
 	{
 		gf2d_input_update();
@@ -334,10 +360,9 @@ int main(int argc, char * argv[])
 		// all drawing should happen betweem clear_screen and next_frame
 			//backgrounds drawn first
 		
-		gf2d_sprite_draw(background, vector2d(0, 0), scale, NULL, NULL, NULL, &colorS, (frame / 3) % 80);
+		gf2d_sprite_draw(background, vector2d(600, 350), scale, scaleC, NULL, NULL, &colorS, (frame / 3) % 80);
 		if (frame > 240)
 		{
-			//vector4d_set(colorS, 50 + rand() % (200 + 1 - 50), 50 + rand() % (200 + 1 - 50), 50 + rand() % (200 + 1 - 50), 255);
 			vector4d_set(colorS, (float)rand() / (float)255, (float)rand() / (float)255, (float)rand() / (float)255, 255);
 			frame = 0;
 		}
@@ -392,7 +417,7 @@ int main(int argc, char * argv[])
 		gf2d_windows_draw_all();
 		gf2d_mouse_draw();
 		Menu();
-		//slog("%f", gf2d_graphics_get_frame_diff());
+		slog("%f", gf2d_graphics_get_frame_diff());
 		//slog("%f", gf2d_graphics_get_frames_per_second());
 		gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
 		if ((gf2d_input_command_down("exit")) && (_quit == NULL))
