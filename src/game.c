@@ -352,6 +352,7 @@ int main(int argc, char * argv[])
 		exit(1);
 	}
 	int number_of_buttons;
+	float slider;
 	SDL_Joystick *joystick;
 	joystick = SDL_JoystickOpen(0);
 	number_of_buttons = SDL_JoystickNumAxes(joystick);
@@ -381,21 +382,9 @@ int main(int argc, char * argv[])
 		case SDL_JOYAXISMOTION:  /* Handle Joystick Motion */
 			if ((event.jaxis.value < -1) || (event.jaxis.value > 1))
 			{
-				if (event.jaxis.axis == 0)
-				{
-					//nipple wraps
-				slog("%i %i", event.jaxis.value, event.jaxis.axis);
-					/* Up-Down movement code goes here */
-				}
 				if (event.jaxis.axis == 1)
 				{
 					//turntable also?
-					slog("%i %i", event.jaxis.value, event.jaxis.axis);
-					/* Up-Down movement code goes here */
-				}
-				if (event.jaxis.axis == 2)
-				{
-					//nipple wraps
 					slog("%i %i", event.jaxis.value, event.jaxis.axis);
 					/* Up-Down movement code goes here */
 				}
@@ -407,8 +396,11 @@ int main(int argc, char * argv[])
 				}
 				if (event.jaxis.axis == 4)
 				{
+					slider = 2 * (event.jaxis.value - (-32768)) / ((32767) - (-32768)) - 1;
 					//slider -3 to 3
-					//slog("%i", event.jaxis.value);
+					slog("%f", slider);
+					slog("%i", event.jaxis.value);
+					
 					/* Left-right movement code goes here */
 				}
 
