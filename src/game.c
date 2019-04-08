@@ -288,7 +288,7 @@ int main(int argc, char * argv[])
 	int fullscreen = 0;
 	Sprite *background = NULL;
 
-	
+
 	const Uint8 * keys;
 	Space *space = NULL;
 
@@ -331,7 +331,7 @@ int main(int argc, char * argv[])
 	);
 
 	SDL_ShowCursor(SDL_DISABLE);
-	
+
 	// init mouse, editor window
 	gf2d_mouse_load("actors/mouse.actor");
 	int frame = 0;
@@ -346,16 +346,160 @@ int main(int argc, char * argv[])
 	vector4d_set(colorS, (float)rand() / (float)255, (float)rand() / (float)255, (float)rand() / (float)255, 255);
 	//ScolorS = ne
 	/*main game loop*/
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0)
+	{
+		fprintf(stderr, "Couldn't initialize SDL: %s\n", SDL_GetError());
+		exit(1);
+	}
+	int number_of_buttons;
+	SDL_Joystick *joystick;
+	joystick = SDL_JoystickOpen(0);
+	number_of_buttons = SDL_JoystickNumAxes(joystick);
+	slog("%i", number_of_buttons);
+	number_of_buttons = SDL_JoystickNumButtons(joystick);
+	slog("%i", number_of_buttons);
+	number_of_buttons = SDL_JoystickNumBalls(joystick);
+	slog("%i", number_of_buttons);
+	number_of_buttons = SDL_JoystickNumHats(joystick);
+	slog("%i", number_of_buttons);
+	SDL_Event event;
 	//gf2d_graphics_set_frame_delay(16);
+	//Shape line = gf2d_shape_edge(0,0, 300,300);
 	while (!_done)
 	{
+		SDL_PollEvent(&event);
+		switch (event.type)
+		{
+		case SDL_KEYDOWN:
+			/* handle keyboard stuff here */
+			break;
+
+		case SDL_QUIT:
+			/* Set whatever flags are necessary to */
+			/* end the main game loop here */
+			break;
+		case SDL_JOYAXISMOTION:  /* Handle Joystick Motion */
+			if ((event.jaxis.value < -1) || (event.jaxis.value > 1))
+			{
+				if (event.jaxis.axis == 0)
+				{
+					//nipple wraps
+				slog("%i %i", event.jaxis.value, event.jaxis.axis);
+					/* Up-Down movement code goes here */
+				}
+				if (event.jaxis.axis == 1)
+				{
+					//turntable also?
+					slog("%i %i", event.jaxis.value, event.jaxis.axis);
+					/* Up-Down movement code goes here */
+				}
+				if (event.jaxis.axis == 2)
+				{
+					//nipple wraps
+					slog("%i %i", event.jaxis.value, event.jaxis.axis);
+					/* Up-Down movement code goes here */
+				}
+				if (event.jaxis.axis == 3)
+				{
+					//nipple wraps
+					//slog("%i", event.jaxis.value);
+					/* Up-Down movement code goes here */
+				}
+				if (event.jaxis.axis == 4)
+				{
+					//slider -3 to 3
+					//slog("%i", event.jaxis.value);
+					/* Left-right movement code goes here */
+				}
+
+				if (event.jaxis.axis == 5)
+				{
+					//turntable at max and min?
+					slog("%i %i", event.jaxis.value,event.jaxis.axis);
+					/* Up-Down movement code goes here */
+				}
+			}
+			break;
+		case SDL_JOYBUTTONDOWN:  /* Handle Joystick Button Presses */
+			if (event.jbutton.button == 0)
+			{
+				//a green fret
+				//slog("hit button %i", event.jbutton.button);
+				/* code goes here */
+			}
+			if (event.jbutton.button == 1)
+			{
+				//b red
+				//slog("hit button %i", event.jbutton.button);
+				/* code goes here */
+			}
+			if (event.jbutton.button == 2)
+			{
+				//x blue
+				//slog("hit button %i", event.jbutton.button);
+				/* code goes here */
+			}
+			if (event.jbutton.button == 3)
+			{
+				//y also starpower
+				//slog("hit button %i", event.jbutton.button);
+				/* code goes here */
+			}
+			if (event.jbutton.button == 4)
+			{
+				//slog("hit button %i", event.jbutton.button);
+				/* code goes here */
+			}
+			if (event.jbutton.button == 5)
+			{
+				//slog("hit button %i", event.jbutton.button);
+				/* code goes here */
+			}
+			if (event.jbutton.button == 6)
+			{
+				//back
+				//slog("hit button %i", event.jbutton.button);
+				/* code goes here */
+			}
+			if (event.jbutton.button == 7)
+			{
+				//start
+				//slog("hit button %i", event.jbutton.button);
+				/* code goes here */
+			}
+			if (event.jbutton.button == 8)
+			{
+				//slog("hit button %i", event.jbutton.button);
+				/* code goes here */
+			}
+			if (event.jbutton.button == 9)
+			{
+				//slog("hit button %i", event.jbutton.button);
+				/* code goes here */
+			}
+			if (event.jbutton.button == 10)
+			{
+				//xbix button	
+				//slog("hit button %i", event.jbutton.button);
+				/* code goes here */
+			}
+			break;
+		case SDL_JOYHATMOTION:  /* Handle Hat Motion */
+			if (event.jhat.value)
+			{
+				//arrow buttons
+				//	slog("%i", event.jhat.value);
+				/* Do up stuff here */
+			}
+			break;
+		}
 		gf2d_input_update();
 		/*update things here*/
 		gf2d_windows_update_all();
 		gf2d_space_update(space);
 		gf2d_entity_think_all();
 		gf2d_mouse_update();
-
+		
 		gf2d_graphics_clear_screen();// clears drawing buffers
 		// all drawing should happen betweem clear_screen and next_frame
 			//backgrounds drawn first
@@ -409,7 +553,8 @@ int main(int argc, char * argv[])
 		default:
 			break;
 		}
-
+		//line to each note
+		//gf2d_shape_draw(line, gf2d_color(255, 255, 255, 255), vector2d(0, 0));
 		gf2d_entity_update_all();
 		// Draw entities		
 		
