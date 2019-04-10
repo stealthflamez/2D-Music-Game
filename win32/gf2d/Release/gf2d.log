@@ -1,26 +1,12 @@
 ﻿  game.c
-c:\users\jeffa\desktop\2d-music-game\src\game.c(41): warning C4305: 'function': truncation from 'double' to 'float'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(42): warning C4305: 'function': truncation from 'double' to 'float'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(43): warning C4305: 'function': truncation from 'double' to 'float'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(62): warning C4018: '<': signed/unsigned mismatch
-c:\users\jeffa\desktop\2d-music-game\src\game.c(65): warning C4133: '=': incompatible types - from 'Shape *' to 'Entity *'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(87): warning C4018: '<': signed/unsigned mismatch
-c:\users\jeffa\desktop\2d-music-game\src\game.c(101): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdlib.h(1334): note: see declaration of 'itoa'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(129): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdlib.h(1334): note: see declaration of 'itoa'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(147): warning C4033: 'loadTrackFromFile' must return a value
-c:\users\jeffa\desktop\2d-music-game\src\game.c(143): warning C4101: 'i': unreferenced local variable
-c:\users\jeffa\desktop\2d-music-game\src\game.c(324): warning C4013: 'camera_set_dimensions' undefined; assuming extern returning int
-c:\users\jeffa\desktop\2d-music-game\src\game.c(399): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\jeffa\desktop\2d-music-game\src\game.c(515): warning C4018: '>': signed/unsigned mismatch
-c:\users\jeffa\desktop\2d-music-game\src\game.c(530): warning C4018: '>': signed/unsigned mismatch
-c:\users\jeffa\desktop\2d-music-game\src\game.c(533): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdlib.h(1334): note: see declaration of 'itoa'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(292): warning C4101: 'keys': unreferenced local variable
+c:\users\jeffa\desktop\2d-music-game\src\game.c(325): warning C4013: 'camera_set_dimensions' undefined; assuming extern returning int
+c:\users\jeffa\desktop\2d-music-game\src\game.c(360): warning C4101: 'event': unreferenced local variable
+c:\users\jeffa\desktop\2d-music-game\src\game.c(356): warning C4101: 'slider': unreferenced local variable
+c:\users\jeffa\desktop\2d-music-game\src\game.c(293): warning C4101: 'keys': unreferenced local variable
+c:\users\jeffa\desktop\2d-music-game\src\game.c(355): warning C4101: 'number_of_buttons': unreferenced local variable
   Generating code
-  1 of 375 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+  3 of 263 functions ( 1.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    2 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   gf2d.vcxproj -> C:\Users\JeffA\Desktop\2D-Music-Game\win32\gf2d\..\..\gf2d.exe

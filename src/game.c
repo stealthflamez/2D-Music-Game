@@ -5,7 +5,7 @@ static Window *_quit = NULL;
 static float hideText = 0;
 static int level = 0;
 static int tracknum = 0;
-static Entity *player;
+static List *player = NULL;
 static List *track = NULL;
 static Mix_Music *music;
 static int mode = 0;
@@ -22,6 +22,7 @@ void onExit(void *data)
 	_done = 1;
 	_quit = NULL;
 }
+/*
 void hitNoteFX()
 {
 	Shape shape;
@@ -236,7 +237,7 @@ void setupWriteLevel(int tracknum)
 		break;
 	}
 }
-
+*/
 void Menu()
 {
 	switch (level)
@@ -268,12 +269,12 @@ void Menu()
 			if (gf2d_input_key_pressed("1"))
 			{
 				level++;
-				setupLevel(tracknum);
+				//setupLevel(tracknum);
 			}
 			else if (gf2d_input_key_pressed("2"))
 			{
 				level++;
-				setupWriteLevel(tracknum);
+				//setupWriteLevel(tracknum);
 			}
 
 	default:
@@ -344,7 +345,7 @@ int main(int argc, char * argv[])
 	scaleC->y = 169;
 	Vector4D colorS;
 	vector4d_set(colorS, (float)rand() / (float)255, (float)rand() / (float)255, (float)rand() / (float)255, 255);
-	//ScolorS = ne
+
 	/*main game loop*/
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0)
 	{
@@ -355,136 +356,22 @@ int main(int argc, char * argv[])
 	float slider;
 	SDL_Joystick *joystick;
 	joystick = SDL_JoystickOpen(0);
-	number_of_buttons = SDL_JoystickNumAxes(joystick);
-	slog("%i", number_of_buttons);
-	number_of_buttons = SDL_JoystickNumButtons(joystick);
-	slog("%i", number_of_buttons);
-	number_of_buttons = SDL_JoystickNumBalls(joystick);
-	slog("%i", number_of_buttons);
-	number_of_buttons = SDL_JoystickNumHats(joystick);
-	slog("%i", number_of_buttons);
+	
 	SDL_Event event;
 	//gf2d_graphics_set_frame_delay(16);
 	//Shape line = gf2d_shape_edge(0,0, 300,300);
+	//new player system
+	player = gf2d_list_new_size(3);
+	gf2d_list_append(player, player_new(vector2d(500, 650)));
+	gf2d_list_append(player, player_new(vector2d(600, 650)));
+	gf2d_list_append(player, player_new(vector2d(700, 650)));
+	Entity *f = (Entity*)gf2d_list_get_nth(player, 0);
+	f->position = vector2d(500, 200);
+	f->body.position = vector2d(500, 200);
+	gf2d_list_insert(player, f, 0);
 	while (!_done)
 	{
-		SDL_PollEvent(&event);
-		switch (event.type)
-		{
-		case SDL_KEYDOWN:
-			/* handle keyboard stuff here */
-			break;
-
-		case SDL_QUIT:
-			/* Set whatever flags are necessary to */
-			/* end the main game loop here */
-			break;
-		case SDL_JOYAXISMOTION:  /* Handle Joystick Motion */
-			if ((event.jaxis.value < -1) || (event.jaxis.value > 1))
-			{
-				if (event.jaxis.axis == 1)
-				{
-					//turntable also?
-					slog("%i %i", event.jaxis.value, event.jaxis.axis);
-					/* Up-Down movement code goes here */
-				}
-				if (event.jaxis.axis == 3)
-				{
-					//nipple wraps
-					//slog("%i", event.jaxis.value);
-					/* Up-Down movement code goes here */
-				}
-				if (event.jaxis.axis == 4)
-				{
-					slider = 2 * (event.jaxis.value - (-32768)) / ((32767) - (-32768)) - 1;
-					//slider -3 to 3
-					slog("%f", slider);
-					slog("%i", event.jaxis.value);
-					
-					/* Left-right movement code goes here */
-				}
-
-				if (event.jaxis.axis == 5)
-				{
-					//turntable at max and min?
-					slog("%i %i", event.jaxis.value,event.jaxis.axis);
-					/* Up-Down movement code goes here */
-				}
-			}
-			break;
-		case SDL_JOYBUTTONDOWN:  /* Handle Joystick Button Presses */
-			if (event.jbutton.button == 0)
-			{
-				//a green fret
-				//slog("hit button %i", event.jbutton.button);
-				/* code goes here */
-			}
-			if (event.jbutton.button == 1)
-			{
-				//b red
-				//slog("hit button %i", event.jbutton.button);
-				/* code goes here */
-			}
-			if (event.jbutton.button == 2)
-			{
-				//x blue
-				//slog("hit button %i", event.jbutton.button);
-				/* code goes here */
-			}
-			if (event.jbutton.button == 3)
-			{
-				//y also starpower
-				//slog("hit button %i", event.jbutton.button);
-				/* code goes here */
-			}
-			if (event.jbutton.button == 4)
-			{
-				//slog("hit button %i", event.jbutton.button);
-				/* code goes here */
-			}
-			if (event.jbutton.button == 5)
-			{
-				//slog("hit button %i", event.jbutton.button);
-				/* code goes here */
-			}
-			if (event.jbutton.button == 6)
-			{
-				//back
-				//slog("hit button %i", event.jbutton.button);
-				/* code goes here */
-			}
-			if (event.jbutton.button == 7)
-			{
-				//start
-				//slog("hit button %i", event.jbutton.button);
-				/* code goes here */
-			}
-			if (event.jbutton.button == 8)
-			{
-				//slog("hit button %i", event.jbutton.button);
-				/* code goes here */
-			}
-			if (event.jbutton.button == 9)
-			{
-				//slog("hit button %i", event.jbutton.button);
-				/* code goes here */
-			}
-			if (event.jbutton.button == 10)
-			{
-				//xbix button	
-				//slog("hit button %i", event.jbutton.button);
-				/* code goes here */
-			}
-			break;
-		case SDL_JOYHATMOTION:  /* Handle Hat Motion */
-			if (event.jhat.value)
-			{
-				//arrow buttons
-				//	slog("%i", event.jhat.value);
-				/* Do up stuff here */
-			}
-			break;
-		}
+		
 		gf2d_input_update();
 		/*update things here*/
 		gf2d_windows_update_all();
@@ -506,6 +393,7 @@ int main(int argc, char * argv[])
 		frame++;
 		// DRAW WORLD
 		gf2d_entity_draw_all();
+		/*
 		switch (mode)
 		{
 		case 1:
@@ -545,6 +433,7 @@ int main(int argc, char * argv[])
 		default:
 			break;
 		}
+		*/
 		//line to each note
 		//gf2d_shape_draw(line, gf2d_color(255, 255, 255, 255), vector2d(0, 0));
 		gf2d_entity_update_all();
@@ -552,15 +441,11 @@ int main(int argc, char * argv[])
 		
 		//UI elements last
 		gf2d_windows_draw_all();
-		gf2d_mouse_draw();
-		Menu();
+		//gf2d_mouse_draw();
+		//Menu();
 		//slog("%f", gf2d_graphics_get_frame_diff());
 		//slog("%f", gf2d_graphics_get_frames_per_second());
 		gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
-		if ((gf2d_input_command_down("exit")) && (_quit == NULL))
-		{
-			_quit = window_yes_no("Exit?", onExit, onCancel, NULL, NULL);
-		}
 	}
 	Mix_HaltMusic();
 	Mix_FreeMusic(music);
