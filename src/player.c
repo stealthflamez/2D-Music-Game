@@ -24,7 +24,7 @@ Entity *player_new(Vector2D position)
 	gf2d_line_cpy(self->name, "player");
 	self->parent = NULL;
 	
-	self->shape = gf2d_shape_rect(-25,-25, 50, 50);
+	self->shape = gf2d_shape_rect(-27,-27, 54, 54);
 	gf2d_body_set(
 		&self->body,
 		"player",
@@ -49,8 +49,8 @@ Entity *player_new(Vector2D position)
 	vector2d_copy(self->position, position);
 
 	vector2d_copy(self->scale, self->actor.al->scale);
-	vector2d_set(self->scaleCenter, 25, 25);
-	vector3d_set(self->rotation, 64, 64, 0);
+	vector2d_set(self->scaleCenter, 270, 270);
+//vector3d_set(self->rotation, 64, 64, 0);
 
 	//self->draw = player_draw;
 	self->update = player_update;
@@ -64,45 +64,9 @@ Entity *player_new(Vector2D position)
 
 }
 
-char* concat(const char *s1, const char *s2)
-{
-	char *result = malloc(strlen(s1) + strlen(s2) + 1); // +1 for the null-terminator
-	// in real code you would check for errors in malloc here
-	strcpy(result, s1);
-	strcat(result, s2);
-	return result;
-}
+
 
 void player_update(Entity *self)
 {
-	char buf[33];
-	itoa(score, buf, 10);
-	char* text = concat("score: ", buf);
-	gf2d_text_draw_line(text, FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 0));
-	const Uint8 *keys;
-	keys = SDL_GetKeyboardState(NULL);
-
-	gf2d_body_draw(&self->body, vector2d(0, 0));
-	gf2d_actor_next_frame(&self->actor);
-	if (gf2d_input_key_pressed("a"))
-	{
-		gf2d_sound_play(self->sound[0], 0, .5, -1, -1);
-		playerData.currentLane += 1;
-		self->position.x = 400;
-		vector2d_copy(self->body.position, self->position);
-	}
-	if (gf2d_input_key_pressed("s"))
-	{
-		gf2d_sound_play(self->sound[0], 0, .5, -1, -1);
-		playerData.currentLane -= 1;
-		self->position.x = 600;
-		vector2d_copy(self->body.position, self->position);
-	}
-	if (gf2d_input_key_pressed("d"))
-	{
-		gf2d_sound_play(self->sound[0], 0, .5, -1, -1);
-		playerData.currentLane -= 1;
-		self->position.x = 800;
-		vector2d_copy(self->body.position, self->position);
-	}
+	
 }

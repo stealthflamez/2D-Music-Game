@@ -34,13 +34,10 @@ typedef struct
 
 /*local gobals*/
 static Graphics gf2d_graphics;
-#define SCREEN_FPS  60;
-const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
-int countedFrames = 0;
-float avgFPS;
+static Uint32 next_time;
+#define TICK_INTERVAL    10
 /*forward declarations*/
 void gf2d_graphics_close();
-
 void gf2d_graphics_initialize(
     char *windowName,
     int viewWidth,
@@ -51,6 +48,7 @@ void gf2d_graphics_initialize(
     Bool fullscreen
 )
 {
+	next_time = SDL_GetTicks() + TICK_INTERVAL;
     Uint32 flags = 0;
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
@@ -82,7 +80,7 @@ void gf2d_graphics_initialize(
         return;
     }
     
-    gf2d_graphics.renderer = SDL_CreateRenderer(gf2d_graphics.main_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
+	gf2d_graphics.renderer = SDL_CreateRenderer(gf2d_graphics.main_window, -1, SDL_RENDERER_ACCELERATED);// | SDL_RENDERER_TARGETTEXTURE);
     if (!gf2d_graphics.renderer)
     {
         slog("failed to create renderer: %s",SDL_GetError());
@@ -206,37 +204,38 @@ Vector2D gf2d_graphics_get_resolution()
 
 void gf2d_graphics_frame_delay()
 {
-	gf2d_graphics.now = SDL_GetTicks();
-	countedFrames++;
-	if (SDL_GetTicks() < SCREEN_TICKS_PER_FRAME)
-	{
-		SDL_Delay(SCREEN_TICKS_PER_FRAME - SDL_GetTicks());
-	}
-	avgFPS = countedFrames / (SDL_GetTicks() / 1000.f);
-	if (avgFPS > 2000000)
-	{
-		avgFPS = 0;
-	}
-	//slog("%f", avgFPS);
-	/*
     Uint32 diff;
     gf2d_graphics.then = gf2d_graphics.now;
     slog_sync();// make sure logs get written when we have time to write it
     gf2d_graphics.now = SDL_GetTicks();
     diff = (gf2d_graphics.now - gf2d_graphics.then);
-	gf2d_graphics.fpsMod = diff / gf2d_graphics.frame_delay;
+	gf2d_graphics.fpsMod = 1000/diff;
     if (diff < gf2d_graphics.frame_delay)
     {
         SDL_Delay(gf2d_graphics.frame_delay - diff);
     }
     gf2d_graphics.fps = 1000.0/MAX(SDL_GetTicks() - gf2d_graphics.then,0.001);
-	*/
+	
 	}
+
+Uint32 time_left(void)
+{
+	Uint32 now;
+
+	now = SDL_GetTicks();
+	if (next_time <= now)
+		return 0;
+	else
+		return next_time - now;
+}
 
 void gf2d_grahics_next_frame()
 {
     SDL_RenderPresent(gf2d_graphics.renderer);
-    gf2d_graphics_frame_delay();
+	
+	SDL_Delay(time_left());
+	next_time += TICK_INTERVAL;
+    //gf2d_graphics_frame_delay();
 }
 
 void gf2d_graphics_clear_screen()

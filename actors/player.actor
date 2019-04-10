@@ -1,37 +1,13 @@
-sprite: images/player2.png
-frameWidth: 50
-frameHeight: 50
-framesPerLine: 23
-scale: 1,1
+sprite: images/playerR.png
+frameWidth: 540
+frameHeight: 540
+framesPerLine: 5
+scale: .1,.1
 color: 255,255,255,255
 colorSpecial: 10,255,100,255
 
 action: idle
 startFrame: 0
-endFrame: 45
+endFrame: 30
 frameRate: .5
 type:   loop
-
-action: shoot
-startFrame: 2
-endFrame: 11
-frameRate: 1
-type:   pass
-
-action: jump
-startFrame: 12
-endFrame: 20
-frameRate: 0.15
-type:   pass
-
-action: walk
-startFrame: 21
-endFrame: 47
-frameRate: 1
-type:   loop
-
-action: hack
-startFrame: 48
-endFrame: 58
-frameRate: 0.60
-type:   pass

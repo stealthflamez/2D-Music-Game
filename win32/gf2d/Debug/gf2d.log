@@ -1,10 +1,71 @@
-﻿  simple_json.c
-  simple_json_array.c
-  simple_json_error.c
-  simple_json_list.c
-  simple_json_object.c
-  simple_json_parse.c
-  simple_json_string.c
+﻿  camera.c
+c:\users\jeffa\desktop\2d-music-game\src\camera.c(1): fatal error C1083: Cannot open include file: 'camera.h': No such file or directory
+  fret.c
+c:\users\jeffa\desktop\2d-music-game\src\fret.c(1): fatal error C1083: Cannot open include file: 'player.h': No such file or directory
+  game.c
+c:\users\jeffa\desktop\2d-music-game\src\game.c(1): fatal error C1083: Cannot open include file: 'game.h': No such file or directory
+  gf2d_actor.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_actor.c(1): fatal error C1083: Cannot open include file: 'gf2d_actor.h': No such file or directory
+  gf2d_audio.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_audio.c(1): fatal error C1083: Cannot open include file: 'gf2d_audio.h': No such file or directory
+  gf2d_body.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_body.c(1): fatal error C1083: Cannot open include file: 'gf2d_body.h': No such file or directory
+  gf2d_callbacks.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_callbacks.c(1): fatal error C1083: Cannot open include file: 'gf2d_callbacks.h': No such file or directory
+  gf2d_collision.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_collision.c(1): fatal error C1083: Cannot open include file: 'gf2d_collision.h': No such file or directory
+  gf2d_color.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_color.c(1): fatal error C1083: Cannot open include file: 'gf2d_color.h': No such file or directory
+  gf2d_config.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_config.c(1): fatal error C1083: Cannot open include file: 'gf2d_config.h': No such file or directory
+  gf2d_draw.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_draw.c(1): fatal error C1083: Cannot open include file: 'gf2d_draw.h': No such file or directory
+  gf2d_dynamic_body.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_dynamic_body.c(1): fatal error C1083: Cannot open include file: 'gf2d_dynamic_body.h': No such file or directory
+  gf2d_elements.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_elements.c(3): fatal error C1083: Cannot open include file: 'gf2d_elements.h': No such file or directory
+  gf2d_element_actor.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_element_actor.c(3): fatal error C1083: Cannot open include file: 'gf2d_element_actor.h': No such file or directory
+  gf2d_element_button.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_element_button.c(1): fatal error C1083: Cannot open include file: 'gf2d_element_button.h': No such file or directory
+  gf2d_element_entry.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_element_entry.c(1): fatal error C1083: Cannot open include file: 'gf2d_element_entry.h': No such file or directory
+  gf2d_element_label.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_element_label.c(3): fatal error C1083: Cannot open include file: 'gf2d_element_label.h': No such file or directory
+  gf2d_element_list.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_element_list.c(3): fatal error C1083: Cannot open include file: 'gf2d_element_list.h': No such file or directory
+  gf2d_entity.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_entity.c(1): fatal error C1083: Cannot open include file: 'gf2d_entity.h': No such file or directory
+  gf2d_graphics.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_graphics.c(1): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
   Generating Code...
-gf2d_config.obj : error LNK2019: unresolved external symbol _sscanf referenced in function _sj_value_as_vector2d
-..\..\gf2d.exe : fatal error LNK1120: 1 unresolved externals
+  Compiling...
+  gf2d_input.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_input.c(1): fatal error C1083: Cannot open include file: 'gf2d_input.h': No such file or directory
+  gf2d_list.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_list.c(1): fatal error C1083: Cannot open include file: 'gf2d_list.h': No such file or directory
+  gf2d_mouse.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_mouse.c(1): fatal error C1083: Cannot open include file: 'gf2d_mouse.h': No such file or directory
+  gf2d_particles.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_particles.c(1): fatal error C1083: Cannot open include file: 'gf2d_particles.h': No such file or directory
+  gf2d_shape.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_shape.c(1): fatal error C1083: Cannot open include file: 'gf2d_shape.h': No such file or directory
+  gf2d_space.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_space.c(1): fatal error C1083: Cannot open include file: 'gf2d_space.h': No such file or directory
+  gf2d_sprite.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_sprite.c(2): fatal error C1083: Cannot open include file: 'SDL_image.h': No such file or directory
+  gf2d_text.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_text.c(1): fatal error C1083: Cannot open include file: 'SDL_ttf.h': No such file or directory
+  gf2d_vector.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_vector.c(4): fatal error C1083: Cannot open include file: 'gf2d_vector.h': No such file or directory
+  gf2d_windows.c
+c:\users\jeffa\desktop\2d-music-game\src\gf2d_windows.c(5): fatal error C1083: Cannot open include file: 'gf2d_graphics.h': No such file or directory
+  level.c
+c:\users\jeffa\desktop\2d-music-game\src\level.c(1): fatal error C1083: Cannot open include file: 'level.h': No such file or directory
+  player.c
+c:\users\jeffa\desktop\2d-music-game\src\player.c(1): fatal error C1083: Cannot open include file: 'player.h': No such file or directory
+  simple_logger.c
+c:\users\jeffa\desktop\2d-music-game\src\simple_logger.c(1): fatal error C1083: Cannot open include file: 'simple_logger.h': No such file or directory
+  windows_common.c
+c:\users\jeffa\desktop\2d-music-game\src\windows_common.c(1): fatal error C1083: Cannot open include file: 'windows_common.h': No such file or directory
+  Generating Code...

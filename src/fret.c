@@ -20,7 +20,7 @@ Entity *fret_new(Vector2D position, Vector4D colorShift)
 	gf2d_line_cpy(self->name, "fret");
 	self->parent = NULL;
 
-	self->shape = gf2d_shape_rect(-16, -16, 32, 32);
+	self->shape = gf2d_shape_rect(-25, -20, 50, 50);
 	gf2d_body_set(
 		&self->body,
 		"fret",
@@ -36,7 +36,7 @@ Entity *fret_new(Vector2D position, Vector4D colorShift)
 		&self->shape,
 		NULL,
 		NULL);
-
+	
 	gf2d_actor_load(&self->actor, "actors/fretR.actor");
 	gf2d_actor_set_action(&self->actor, "idle");
 	//self->sound[0] = gf2d_sound_load("sounds/laneSwitch1.wav", 1, -1);
@@ -44,7 +44,8 @@ Entity *fret_new(Vector2D position, Vector4D colorShift)
 	vector2d_copy(self->position, position);
 
 	vector2d_copy(self->scale, self->actor.al->scale);
-	vector2d_set(self->scaleCenter, 32, 32);
+	//Center needs to be center of image, not shape size
+	vector2d_set(self->scaleCenter, 86.5, 133);
 	vector4d_copy(self->actor.color, colorShift);
 	self->update = fret_update;
 
