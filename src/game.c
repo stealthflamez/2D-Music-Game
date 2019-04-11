@@ -481,27 +481,27 @@ int main(int argc, char * argv[])
 				{
 					if (e.jaxis.value > 4 && HeldG)
 					{
-						slog("down");
+						slog("down G");
 					}
 					if (e.jaxis.value < -4 && HeldG)
 					{
-						slog("up");
+						slog("up G");
 					}
 					if (e.jaxis.value > 4 && HeldR)
 					{
-						slog("down");
+						slog("down R");
 					}
 					if (e.jaxis.value < -4 && HeldR)
 					{
-						slog("up");
+						slog("up R");
 					}
 					if (e.jaxis.value > 4 && HeldB)
 					{
-						slog("down");
+						slog("down B");
 					}
 					if (e.jaxis.value < -4 && HeldB)
 					{
-						slog("up");
+						slog("up B");
 					}
 				}
 			}
