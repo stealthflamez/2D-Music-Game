@@ -16,6 +16,7 @@ int HeldR;
 int HeldG;
 int HeldB;
 int Held;
+int turning;
 SDL_Event e;
 int currentlane;
 char* text;
@@ -259,6 +260,66 @@ void Menu()
 			gf2d_text_draw_line("1)Lil Jon(Get Low) vs. 50 Cent(In Da Club)", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 100));
 			gf2d_text_draw_line("2)Love Is Gone vs. Black & Gold", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 200));
 			gf2d_text_draw_line("3)track 3", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 300));
+
+
+			if (e.type == SDL_JOYAXISMOTION)
+			{
+				//Motion on controller 0
+				if (e.jaxis.which == 0)
+				{
+					if (e.jaxis.axis == 1)
+					{
+						if (e.jaxis.value > 8 && turning == 0)
+						{
+							slog("down G");
+							turning = 1;
+						}
+						else if (e.jaxis.value < -8 && turning == 0)
+						{
+							slog("up G");
+							turning = 1;
+						}
+						else {
+							turning = 0;
+						}
+					}
+				}
+			}
+			if (e.type == SDL_JOYBUTTONDOWN)
+			{
+				if (e.jbutton.button == 0 && HeldG == 0)
+				{
+					//a green fret
+					slog("hit green button");
+					hitNote(track, (Entity*)gf2d_list_get_nth(player, 0));
+					HeldG = 1;
+					/* code goes here */
+				}
+				if (e.jbutton.button == 1 && HeldR == 0)
+				{
+					//b red
+					slog("hit red button");
+					hitNote(track, (Entity*)gf2d_list_get_nth(player, 1));
+					HeldR = 1;
+					/* code goes here */
+				}
+				if (e.jbutton.button == 2 && HeldB == 0)
+				{
+					//x blue
+					slog("hit blue button");
+					hitNote(track, (Entity*)gf2d_list_get_nth(player, 2));
+					HeldB = 1;
+					/* code goes here */
+				}
+			}
+			if (e.type == SDL_JOYBUTTONUP)
+			{
+				HeldG = 0;
+				HeldB = 0;
+				HeldR = 0;
+			}
+
+
 			if (gf2d_input_key_pressed("1"))
 			{
 				level++;
