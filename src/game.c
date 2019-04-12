@@ -1,29 +1,38 @@
 #include "game.h"
+
 const int JOYSTICK_DEAD_ZONE = 8000;
 static int _done = 0;
 static Window *_quit = NULL;
-static float hideText = 0;
+//UI menu
 static int level = 0;
 static int tracknum = 0;
+//
+//Level setup
 static List *player = NULL;
 static List *track = NULL;
+static List *trackName = NULL;
 static Mix_Music *music;
 static int mode = 0;
 static int endtime = 0;
 static ParticleEmitter *pe;
+int currentlane;
+//
+//controller
 SDL_Joystick* gGameController = NULL;
 int HeldR;
 int HeldG;
 int HeldB;
 int Held;
 int turning;
+int selected;
 SDL_Event e;
-int currentlane;
+//
+
+//score
 char* text;
 char buf[33];
-
 int score;
-
+//
 void onCancel(void *data)
 {
 	_quit = NULL;
@@ -172,6 +181,36 @@ List *loadTrackFromFile(char *filename)
 	return track;
 }
 
+List *loadTrackNameFromFile(char *filename)
+{
+	FILE *file;
+	file = fopen(filename, "r");
+	List *temp = NULL;
+	temp = gf2d_list_new_size(10);
+	TextLine buffer;
+	
+	while (fscanf(file, "%[^\n] ", buffer) == 1) // expect 1 successful conversion
+	{
+		//strdup makes a new pointer
+		char* d = strdup(buffer);
+		temp = gf2d_list_append(temp, d);
+		slog(&buffer);
+		// process buffer
+	}
+	if (feof(file))
+	{
+		// hit end of file
+	}
+	else
+	{
+		// some other error interrupted the read
+	}
+
+	fclose(file);
+
+	return temp;
+}
+
 void setupLevel(int tracknum)
 {
 
@@ -256,33 +295,50 @@ void Menu()
 	switch (level)
 	{
 		case 0:
+			//tracklist selection
 			gf2d_text_draw_line("Tracks", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 0));
-			gf2d_text_draw_line("1)Lil Jon(Get Low) vs. 50 Cent(In Da Club)", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 100));
-			gf2d_text_draw_line("2)Love Is Gone vs. Black & Gold", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 200));
-			gf2d_text_draw_line("3)track 3", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 300));
 
+			if (selected > trackName->count - 1)
+				selected = 0;
+			if (selected < 0)
+				selected = trackName->count - 1;
+			
+			for (int i = 0; i < trackName->count; i++)
+			{
+				if (i == selected) 
+					gf2d_text_draw_line((char*)gf2d_list_get_nth(trackName, i), FT_H1, gf2d_color(255, 0, 255, 255), vector2d(0, 50 * i + 50));
+				else
+					gf2d_text_draw_line((char*)gf2d_list_get_nth(trackName, i), FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 50 * i + 50));
+			}
+
+			
 
 			if (e.type == SDL_JOYAXISMOTION)
 			{
 				//Motion on controller 0
+			
 				if (e.jaxis.which == 0)
 				{
-					if (e.jaxis.axis == 1)
+					if (e.jaxis.axis == 1 && e.jaxis.value > 2 || e.jaxis.value < -2 )
 					{
-						if (e.jaxis.value > 8 && turning == 0)
+						if (e.jaxis.value > 4 && turning == 0)
 						{
 							slog("down G");
 							turning = 1;
+							selected--;
 						}
-						else if (e.jaxis.value < -8 && turning == 0)
+						else if (e.jaxis.value < -4 && turning == 0)
 						{
 							slog("up G");
 							turning = 1;
-						}
-						else {
-							turning = 0;
+							selected++;
 						}
 					}
+					else
+					{
+						turning = 0;
+					}
+					
 				}
 			}
 			if (e.type == SDL_JOYBUTTONDOWN)
@@ -291,7 +347,6 @@ void Menu()
 				{
 					//a green fret
 					slog("hit green button");
-					hitNote(track, (Entity*)gf2d_list_get_nth(player, 0));
 					HeldG = 1;
 					/* code goes here */
 				}
@@ -299,7 +354,6 @@ void Menu()
 				{
 					//b red
 					slog("hit red button");
-					hitNote(track, (Entity*)gf2d_list_get_nth(player, 1));
 					HeldR = 1;
 					/* code goes here */
 				}
@@ -307,7 +361,6 @@ void Menu()
 				{
 					//x blue
 					slog("hit blue button");
-					hitNote(track, (Entity*)gf2d_list_get_nth(player, 2));
 					HeldB = 1;
 					/* code goes here */
 				}
@@ -319,7 +372,7 @@ void Menu()
 				HeldR = 0;
 			}
 
-
+			
 			if (gf2d_input_key_pressed("1"))
 			{
 				level++;
@@ -439,7 +492,8 @@ int main(int argc, char * argv[])
 	
 	int number_of_buttons;
 	float slider;
-	
+	trackName = gf2d_list_new(10);
+	trackName = loadTrackNameFromFile("TrackName");
 
 	//Shape line = gf2d_shape_edge(0,0, 300,300);
 	//new player system
@@ -455,10 +509,6 @@ int main(int argc, char * argv[])
 		
 		gf2d_input_update();
 		/*update things here*/
-		
-		
-
-
 		gf2d_windows_update_all();
 		gf2d_space_update(space);
 		gf2d_entity_think_all();
@@ -743,6 +793,7 @@ int main(int argc, char * argv[])
 		//line to each note
 		//gf2d_shape_draw(line, gf2d_color(255, 255, 255, 255), vector2d(0, 0));
 		gf2d_entity_update_all();
+		
 	
 		gf2d_windows_draw_all();
 		//gf2d_mouse_draw();
