@@ -15,6 +15,7 @@ SDL_Joystick* gGameController = NULL;
 int HeldR;
 int HeldG;
 int HeldB;
+int Held;
 SDL_Event e;
 int currentlane;
 char* text;
@@ -159,11 +160,11 @@ List *loadTrackFromFile(char *filename)
 		fscanf(file, "%f", &y);
 		slog("%f", x);
 		slog("%f", y);
-		if(x == 400)
-			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset + 600), vector4d(255, 0, 0, 255)));
-		if (x == 600)
+		if(x <= 500)
 			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset + 600), vector4d(0, 255, 0, 255)));
-		if (x == 800)
+		else if (x == 600)
+			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset + 600), vector4d(255, 0, 0, 255)));
+		else if (x >= 700)
 			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset + 600), vector4d(0, 0, 255, 255)));
 	}
 	fclose(file);
@@ -303,6 +304,9 @@ int main(int argc, char * argv[])
 
 	const Uint8 * keys;
 	Space *space = NULL;
+
+	itoa(score, buf, 10);
+	text = concat("score: ", buf);
 
 	//basic setup
 	/*parse args*/
@@ -473,6 +477,33 @@ int main(int argc, char * argv[])
 						}
 					}
 				}
+				if (e.jaxis.axis == 1)
+				{
+					if (e.jaxis.value > 4 && HeldG)
+					{
+						slog("down G");
+					}
+					if (e.jaxis.value < -4 && HeldG)
+					{
+						slog("up G");
+					}
+					if (e.jaxis.value > 4 && HeldR)
+					{
+						slog("down R");
+					}
+					if (e.jaxis.value < -4 && HeldR)
+					{
+						slog("up R");
+					}
+					if (e.jaxis.value > 4 && HeldB)
+					{
+						slog("down B");
+					}
+					if (e.jaxis.value < -4 && HeldB)
+					{
+						slog("up B");
+					}
+				}
 			}
 			if (e.type == SDL_JOYBUTTONDOWN)
 			{
@@ -587,8 +618,8 @@ int main(int argc, char * argv[])
 				{
 					//a green fret
 					slog("hit green button");
-					Entity *g = (Entity*)gf2d_list_get_nth(player, 2);
-					track = gf2d_list_append(track, (fret_new(g->position, vector4d(0, 0, 255, 255))));
+					Entity *g = (Entity*)gf2d_list_get_nth(player, 0);
+					track = gf2d_list_append(track, (fret_new(g->position, vector4d(0, 255, 0, 255))));
 					HeldG = 1;
 					/* code goes here */
 				}
@@ -597,7 +628,7 @@ int main(int argc, char * argv[])
 					//b red
 					slog("hit red button");
 					Entity *f = (Entity*)gf2d_list_get_nth(player, 1);
-					track = gf2d_list_append(track, &f->position, (fret_new(f->position, vector4d(255, 0, 0, 255))));
+					track = gf2d_list_append(track, (fret_new(f->position, vector4d(255, 0, 0, 255))));
 					HeldR = 1;
 					/* code goes here */
 				}
@@ -605,17 +636,28 @@ int main(int argc, char * argv[])
 				{
 					//x blue
 					slog("hit blue button");
-					Entity *q = (Entity*)gf2d_list_get_nth(player, 0);
-					track = gf2d_list_append(track, &q->position, (fret_new(q->position, vector4d(255, 0, 0, 255))));
+					Entity *q = (Entity*)gf2d_list_get_nth(player, 2);
+					track = gf2d_list_append(track, (fret_new(q->position, vector4d(0, 0, 255, 255))));
 					HeldB = 1;
 					/* code goes here */
 				}
+				if (e.jbutton.button == 7 && Held == 0)
+				{
+					//start
+					char buf[33];
+					itoa(tracknum, buf, 10);
+					char* trackname = concat("track", buf);
+					writeTrackToFile(trackname, track);
+					Held = 1;
+				}
+				
 			}
 			if (e.type == SDL_JOYBUTTONUP)
 			{
 				HeldG = 0;
 				HeldB = 0;
 				HeldR = 0;
+				Held = 0;
 			}
 			writeTrack(track);
 			if (SDL_GetTicks() > endtime)
@@ -640,14 +682,9 @@ int main(int argc, char * argv[])
 		//line to each note
 		//gf2d_shape_draw(line, gf2d_color(255, 255, 255, 255), vector2d(0, 0));
 		gf2d_entity_update_all();
-		// Draw entities		
-		
-		//UI elements last
+	
 		gf2d_windows_draw_all();
 		//gf2d_mouse_draw();
-		
-		//slog("%f", gf2d_graphics_get_frame_diff());
-		//slog("%f", gf2d_graphics_get_frames_per_second());
 		gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
 	}
 	Mix_HaltMusic();
