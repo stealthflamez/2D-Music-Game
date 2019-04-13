@@ -19,13 +19,13 @@ int currentlane;
 //
 //controller
 SDL_Joystick* gGameController = NULL;
-int HeldR;
-int HeldG;
-int HeldB;
-int Held;
-int turning;
-int selected;
-SDL_Event e;
+static int HeldR;
+static int HeldG;
+static int HeldB;
+static int Held;
+static int turning;
+static int selected;
+static SDL_Event e;
 //
 
 //score
@@ -33,16 +33,6 @@ char* text;
 char buf[33];
 int score;
 //
-void onCancel(void *data)
-{
-	_quit = NULL;
-}
-void onExit(void *data)
-{
-	_done = 1;
-	_quit = NULL;
-}
-
 char* concat(const char *s1, const char *s2)
 {
 	char *result = malloc(strlen(s1) + strlen(s2) + 1); // +1 for the null-terminator
@@ -207,7 +197,6 @@ List *loadTrackNameFromFile(char *filename)
 	}
 
 	fclose(file);
-
 	return temp;
 }
 
@@ -215,27 +204,27 @@ void setupLevel(int tracknum)
 {
 
 	player = gf2d_list_new_size(3);
-	gf2d_list_append(player, player_new(vector2d(500, 650)));
-	gf2d_list_append(player, player_new(vector2d(600, 650)));
-	gf2d_list_append(player, player_new(vector2d(700, 650)));
+	player = gf2d_list_append(player, player_new(vector2d(500, 650)));
+	player = gf2d_list_append(player, player_new(vector2d(600, 650)));
+	player = gf2d_list_append(player, player_new(vector2d(700, 650)));
 
 	switch (tracknum)
 	{
-	case 1:
+	case 0:
 		music = Mix_LoadMUS("music/track1.mp3");
 		track = loadTrackFromFile("track1");
 		Mix_PlayMusic(music, 0);
 		endtime = SDL_GetTicks() + 290000;
 		mode++;
 		break;
-	case 2:
+	case 1:
 		music = Mix_LoadMUS("music/track2.mp3");
 		track = loadTrackFromFile("track2");
 		Mix_PlayMusic(music, 0);
 		endtime = SDL_GetTicks()+ 212000;
 		mode++;
 		break;
-	case 3:
+	case 2:
 		music = Mix_LoadMUS("music/track3.mp3");
 		track = loadTrackFromFile("track3");
 		Mix_PlayMusic(music, 0);
@@ -252,13 +241,13 @@ void setupLevel(int tracknum)
 void setupWriteLevel(int tracknum)
 {
 	player = gf2d_list_new_size(3);
-	gf2d_list_append(player, player_new(vector2d(500, 650)));
-	gf2d_list_append(player, player_new(vector2d(600, 650)));
-	gf2d_list_append(player, player_new(vector2d(700, 650)));
+	player = gf2d_list_append(player, player_new(vector2d(500, 650)));
+	player = gf2d_list_append(player, player_new(vector2d(600, 650)));
+	player = gf2d_list_append(player, player_new(vector2d(700, 650)));
 
 	switch (tracknum)
 	{
-	case 1:
+	case 0:
 		music = Mix_LoadMUS("music/track1.mp3");
 		Mix_PlayMusic(music, 0);
 		gf2d_list_delete(track);
@@ -267,7 +256,7 @@ void setupWriteLevel(int tracknum)
 		endtime = SDL_GetTicks() + 290000;
 		mode = 2;
 		break;
-	case 2:
+	case 1:
 		music = Mix_LoadMUS("music/track2.mp3");
 		Mix_PlayMusic(music, 0);
 		gf2d_list_delete(track);
@@ -276,7 +265,7 @@ void setupWriteLevel(int tracknum)
 		endtime = SDL_GetTicks() + 212000;
 		mode = 2;
 		break;
-	case 3:
+	case 2:
 		music = Mix_LoadMUS("music/track3.mp3");
 		Mix_PlayMusic(music, 0);
 		gf2d_list_delete(track);
@@ -294,119 +283,159 @@ void Menu()
 {
 	switch (level)
 	{
-		case 0:
-			//tracklist selection
-			gf2d_text_draw_line("Tracks", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 0));
+	case 0:
+		//tracklist selection
+		gf2d_text_draw_line("Tracks", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 0));
+		//slog("%i", selected);
+		if (selected > trackName->count - 1)
+			selected = 0;
+		else  if (selected < 0)
+			selected = 2;
 
-			if (selected > trackName->count - 1)
-				selected = 0;
-			if (selected < 0)
-				selected = trackName->count - 1;
-			
-			for (int i = 0; i < trackName->count; i++)
+		for (int i = 0; i < trackName->count; i++)
+		{
+			if (i == selected)
+				gf2d_text_draw_line((char*)gf2d_list_get_nth(trackName, i), FT_H1, gf2d_color(255, 0, 255, 255), vector2d(0, 50 * i + 50));
+			else
+				gf2d_text_draw_line((char*)gf2d_list_get_nth(trackName, i), FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 50 * i + 50));
+		}
+
+
+
+		if (e.type == SDL_JOYAXISMOTION)
+		{
+			//Motion on controller 0
+
+			if (e.jaxis.which == 0)
 			{
-				if (i == selected) 
-					gf2d_text_draw_line((char*)gf2d_list_get_nth(trackName, i), FT_H1, gf2d_color(255, 0, 255, 255), vector2d(0, 50 * i + 50));
+				//slog("%i", selected);
+				if (e.jaxis.axis == 1 && turning == 0)
+				{
+					slog("%i", e.jaxis.value);
+					if (e.jaxis.value > 6)
+					{
+						slog("down G");
+						turning = 1;
+						selected--;
+					}
+					else if (e.jaxis.value < -6)
+					{
+						slog("up G");
+						turning = 1;
+						selected++;
+					}
+				}
+				else if (e.jaxis.value == -1)
+				{
+					turning = 0;
+				}
+
+			}
+		}
+		if (e.type == SDL_JOYBUTTONDOWN)
+		{
+			if (e.jbutton.button == 0 && HeldG == 0)
+			{
+				//a green fret
+				slog("hit green button");
+				level++;
+				tracknum = selected;
+				HeldG = 1;
+				/* code goes here */
+			}
+		}
+		if (e.type == SDL_JOYBUTTONUP)
+		{
+			HeldG = 0;
+			HeldR = 0;
+		}
+		break;
+	case 1:
+
+		if (selected > 1)
+			selected = 0;
+		else  if (selected < 0)
+			selected = 1;
+
+		for (int i = 0; i < 2; i++)
+		{
+			if (selected == 0)
+			{
+
+				gf2d_text_draw_line("Play song", FT_H1, gf2d_color(255, 0, 255, 255), vector2d(0, 0));
+				gf2d_text_draw_line("Write song", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 50));
+			}
+			else if (selected == 1)
+			{
+				gf2d_text_draw_line("Play song", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 0));
+				gf2d_text_draw_line("Write song", FT_H1, gf2d_color(255, 0, 255, 255), vector2d(0, 50));
+			}
+		}
+
+		if (e.type == SDL_JOYAXISMOTION)
+		{
+			//Motion on controller 0
+
+			if (e.jaxis.which == 0)
+			{
+				//slog("%i", selected);
+				if (e.jaxis.axis == 1 && turning == 0)
+				{
+					slog("%i", e.jaxis.value);
+					if (e.jaxis.value > 6)
+					{
+						slog("down G");
+						turning = 1;
+						selected--;
+					}
+					else if (e.jaxis.value < -6)
+					{
+						slog("up G");
+						turning = 1;
+						selected++;
+					}
+				}
+				else if (e.jaxis.value == -1)
+				{
+					turning = 0;
+				}
+
+			}
+		}
+		if (e.type == SDL_JOYBUTTONDOWN)
+		{
+			if (e.jbutton.button == 0 && HeldG == 0)
+			{
+				//a green fret
+				slog("hit green button");
+				level++;
+				if (selected == 0)
+					setupLevel(tracknum);
 				else
-					gf2d_text_draw_line((char*)gf2d_list_get_nth(trackName, i), FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 50 * i + 50));
+					setupWriteLevel(tracknum);
+				HeldG = 1;
+				/* code goes here */
 			}
-
-			
-
-			if (e.type == SDL_JOYAXISMOTION)
+			else if (e.jbutton.button == 1 && HeldR == 0)
 			{
-				//Motion on controller 0
-			
-				if (e.jaxis.which == 0)
-				{
-					if (e.jaxis.axis == 1 && e.jaxis.value > 2 || e.jaxis.value < -2 )
-					{
-						if (e.jaxis.value > 4 && turning == 0)
-						{
-							slog("down G");
-							turning = 1;
-							selected--;
-						}
-						else if (e.jaxis.value < -4 && turning == 0)
-						{
-							slog("up G");
-							turning = 1;
-							selected++;
-						}
-					}
-					else
-					{
-						turning = 0;
-					}
-					
-				}
+				//b red
+				slog("hit red button");
+				level--;
+				selected = 0;
+				HeldR = 1;
+				/* code goes here */
 			}
-			if (e.type == SDL_JOYBUTTONDOWN)
-			{
-				if (e.jbutton.button == 0 && HeldG == 0)
-				{
-					//a green fret
-					slog("hit green button");
-					HeldG = 1;
-					/* code goes here */
-				}
-				if (e.jbutton.button == 1 && HeldR == 0)
-				{
-					//b red
-					slog("hit red button");
-					HeldR = 1;
-					/* code goes here */
-				}
-				if (e.jbutton.button == 2 && HeldB == 0)
-				{
-					//x blue
-					slog("hit blue button");
-					HeldB = 1;
-					/* code goes here */
-				}
-			}
-			if (e.type == SDL_JOYBUTTONUP)
-			{
-				HeldG = 0;
-				HeldB = 0;
-				HeldR = 0;
-			}
-
-			
-			if (gf2d_input_key_pressed("1"))
-			{
-				level++;
-				tracknum = 1;
-			}
-			else if (gf2d_input_key_pressed("2"))
-			{
-				level++;
-				tracknum = 2;
-			}
-			else if (gf2d_input_key_pressed("3"))
-			{
-				level++;
-				tracknum = 3;
-			}
-			break;
-		case 1:
-			gf2d_text_draw_line("1:)PLay song", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 0));
-			gf2d_text_draw_line("2:)Write song", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 100));
-			if (gf2d_input_key_pressed("1"))
-			{
-				level++;
-				setupLevel(tracknum);
-			}
-			else if (gf2d_input_key_pressed("2"))
-			{
-				level++;
-				setupWriteLevel(tracknum);
-			}
-
+		}
+		if (e.type == SDL_JOYBUTTONUP)
+		{
+			HeldG = 0;
+			HeldR = 0;
+		}
+		break;
 	default:
 		break;
+		}
 	}
-}
 
 int main(int argc, char * argv[])
 {
@@ -414,10 +443,6 @@ int main(int argc, char * argv[])
 	int i;
 	int fullscreen = 0;
 	Sprite *background = NULL;
-
-
-	const Uint8 * keys;
-	Space *space = NULL;
 
 	itoa(score, buf, 10);
 	text = concat("score: ", buf);

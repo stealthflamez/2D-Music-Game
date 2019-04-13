@@ -57,9 +57,9 @@ Entity *fret_new(Vector2D position, Vector4D colorShift)
 
 void fret_update(Entity *self)
 {
-	self->position.y += 2;
+	self->position.y += 4;
 	self->body.position = self->position;
-	gf2d_body_draw(&self->body, vector2d(0, 0));
+//	gf2d_body_draw(&self->body, vector2d(0, 0));
 }
 
 void fret_free(Entity *self)
