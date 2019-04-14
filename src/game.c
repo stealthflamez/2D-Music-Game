@@ -15,7 +15,7 @@ static Mix_Music *music;
 static int mode = 0;
 static int endtime = 0;
 static ParticleEmitter *pe;
-int currentlane;
+static int currentlane;
 //
 //controller
 SDL_Joystick* gGameController = NULL;
@@ -83,7 +83,7 @@ void hitNote(List *track, Entity *player)
 			if (gf2d_body_body_collide(&player->body, &f->body))
 			{
 				slog("hit");
-				hitNoteFX(player);
+				//hitNoteFX(player);
 				score += 100;
 				itoa(score, buf, 10);
 				text = concat("score: ", buf);
@@ -93,57 +93,57 @@ void hitNote(List *track, Entity *player)
 			}
 		}
 }
-
+//done 
 void writeTrackToFile(char *filename, List *track)
 {
 	FILE *file;
 	file = fopen(filename, "w");
+
+	Entity *f;
 	if (!file)
 	{
 		return;
 	}
 	for (int i = 0; i < track->count; i++)
 	{
-		Entity *f;
 		f = track->elements[i].data;
-		fprintf_s(file, "%f\n%f\n", f->position.x, f->position.y);
+		fprintf_s(file, "%i\n%i\n", f->position.x, f->position.y);
 	}
-
+	gf2d_entity_free(f);
 	fclose(file);
 }
-
+//done uses tracklist, score, selected
 void SaveHighScore()
 {
+	//FILE *file;
+	//char buf[33];
+	//itoa(tracknum, buf, 10);
+	//char* trackname = concat("HighScore for track ", buf);
+	//file = fopen(trackname, "a");
+	//if (!file)
+	//{
+	//	return;
+	//}
+	//fprintf_s(file, "%i\n", score);
+	//fclose(file);
 	FILE *file;
-	char buf[33];
-	itoa(tracknum, buf, 10);
-	char* trackname = concat("HighScore for track ", buf);
-	file = fopen(trackname, "a");
+	char* trackname = concat("HighScore for ", (char*)gf2d_list_get_nth(trackName, selected));
+	file = fopen(trackname, "a+");
 	if (!file)
 	{
 		return;
 	}
 	fprintf_s(file, "%i\n", score);
+	free(trackname);
 	fclose(file);
 }
-
-void writeTrack(List *track)
-{
-	if (gf2d_input_key_pressed("9"))
-	{
-		char buf[33];
-		itoa(tracknum, buf, 10);
-		char* trackname = concat("track", buf);
-		writeTrackToFile(trackname, track);
-	}
-}
-
+//Free list
 List *loadTrackFromFile(char *filename)
 {
 	FILE *file;
 	file = fopen(filename, "r");
 	List *track = NULL;
-	track = gf2d_list_new_size(500);
+	track = gf2d_list_new();
 	float x;
 	float y;
 	float i;
@@ -158,10 +158,8 @@ List *loadTrackFromFile(char *filename)
 	{
 		fscanf(file, "%f", &x);
 		fscanf(file, "%f", &y);
-		slog("%f", x);
-		slog("%f", y);
 		if(x <= 500)
-			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset + 600), vector4d(0, 255, 0, 255)));
+			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset + 600), vector4d(0, 255, 0, 255))); //+ 600
 		else if (x == 600)
 			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset + 600), vector4d(255, 0, 0, 255)));
 		else if (x >= 700)
@@ -170,13 +168,13 @@ List *loadTrackFromFile(char *filename)
 	fclose(file);
 	return track;
 }
-
+//Free list
 List *loadTrackNameFromFile(char *filename)
 {
 	FILE *file;
 	file = fopen(filename, "r");
 	List *temp = NULL;
-	temp = gf2d_list_new_size(10);
+	temp = gf2d_list_new();
 	TextLine buffer;
 	
 	while (fscanf(file, "%[^\n] ", buffer) == 1) // expect 1 successful conversion
@@ -195,7 +193,7 @@ List *loadTrackNameFromFile(char *filename)
 	{
 		// some other error interrupted the read
 	}
-
+	free(buffer);
 	fclose(file);
 	return temp;
 }
@@ -207,7 +205,9 @@ void setupLevel(int tracknum)
 	player = gf2d_list_append(player, player_new(vector2d(500, 650)));
 	player = gf2d_list_append(player, player_new(vector2d(600, 650)));
 	player = gf2d_list_append(player, player_new(vector2d(700, 650)));
-
+	SDL_PumpEvents();
+	SDL_FlushEvent(e.type);
+	//make generic.name of track and music track known. missing length of song
 	switch (tracknum)
 	{
 	case 0:
@@ -244,7 +244,8 @@ void setupWriteLevel(int tracknum)
 	player = gf2d_list_append(player, player_new(vector2d(500, 650)));
 	player = gf2d_list_append(player, player_new(vector2d(600, 650)));
 	player = gf2d_list_append(player, player_new(vector2d(700, 650)));
-
+	SDL_PumpEvents();
+	SDL_FlushEvent(e.type);
 	switch (tracknum)
 	{
 	case 0:
@@ -535,7 +536,6 @@ int main(int argc, char * argv[])
 		gf2d_input_update();
 		/*update things here*/
 		gf2d_windows_update_all();
-		gf2d_space_update(space);
 		gf2d_entity_think_all();
 		gf2d_mouse_update();
 		
@@ -613,6 +613,7 @@ int main(int argc, char * argv[])
 						}
 					}
 				}
+				//scratch
 				if (e.jaxis.axis == 1)
 				{
 					if (e.jaxis.value > 4 && HeldG)
@@ -795,7 +796,6 @@ int main(int argc, char * argv[])
 				HeldR = 0;
 				Held = 0;
 			}
-			writeTrack(track);
 			if (SDL_GetTicks() > endtime)
 			{
 				char buf[33];
