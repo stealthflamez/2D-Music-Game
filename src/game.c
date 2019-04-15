@@ -5,11 +5,15 @@ static int _done = 0;
 static Window *_quit = NULL;
 //UI menu
 static int level = 0;
+//position in tracklist
 static int tracknum = 0;
 //
 //Level setup
 static List *player = NULL;
 static List *track = NULL;
+static List *trackG = NULL;
+static List *trackR = NULL;
+static List *trackB = NULL;
 static List *trackName = NULL;
 static Mix_Music *music;
 static int mode = 0;
@@ -76,10 +80,11 @@ void hitNoteFX(Entity *player)
 }
 void hitNote(List *track, Entity *player)
 {
+	Entity *f;
 		for (int i = 0; i < track->count; i++)
 		{
-			Entity *f;
-			f = (Shape*)track->elements[i].data;
+			
+			f = track->elements[i].data;
 			if (gf2d_body_body_collide(&player->body, &f->body))
 			{
 				slog("hit");
@@ -92,6 +97,7 @@ void hitNote(List *track, Entity *player)
 				break;
 			}
 		}
+		
 }
 //done 
 void writeTrackToFile(char *filename, List *track)
@@ -138,12 +144,12 @@ void SaveHighScore()
 	fclose(file);
 }
 //Free list
-List *loadTrackFromFile(char *filename)
+void *loadTrackFromFile(char *filename)
 {
+	//todo fix this so 3 lane save
 	FILE *file;
 	file = fopen(filename, "r");
-	List *track = NULL;
-	track = gf2d_list_new();
+	
 	float x;
 	float y;
 	float i;
@@ -159,14 +165,14 @@ List *loadTrackFromFile(char *filename)
 		fscanf(file, "%f", &x);
 		fscanf(file, "%f", &y);
 		if(x <= 500)
-			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset + 600), vector4d(0, 255, 0, 255))); //+ 600
+			trackG = gf2d_list_append(trackG, fret_new(vector2d(x, y - offset + 600), vector4d(0, 255, 0, 255))); //+ 600
 		else if (x == 600)
-			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset + 600), vector4d(255, 0, 0, 255)));
+			trackR = gf2d_list_append(trackR, fret_new(vector2d(x, y - offset + 600), vector4d(255, 0, 0, 255)));
 		else if (x >= 700)
-			track = gf2d_list_append(track, fret_new(vector2d(x, y - offset + 600), vector4d(0, 0, 255, 255)));
+			trackB = gf2d_list_append(trackB, fret_new(vector2d(x, y - offset + 600), vector4d(0, 0, 255, 255)));
 	}
+	
 	fclose(file);
-	return track;
 }
 //Free list
 List *loadTrackNameFromFile(char *filename)
@@ -193,7 +199,6 @@ List *loadTrackNameFromFile(char *filename)
 	{
 		// some other error interrupted the read
 	}
-	free(buffer);
 	fclose(file);
 	return temp;
 }
@@ -207,17 +212,21 @@ void setupLevel(int tracknum)
 	player = gf2d_list_append(player, player_new(vector2d(700, 650)));
 	SDL_PumpEvents();
 	SDL_FlushEvent(e.type);
+	char *l;
 	//make generic.name of track and music track known. missing length of song
-	switch (tracknum)
-	{
-	case 0:
-		music = Mix_LoadMUS("music/track1.mp3");
-		track = loadTrackFromFile("track1");
-		Mix_PlayMusic(music, 0);
-		endtime = SDL_GetTicks() + 290000;
+	
+		l = concat("music", "/");
+		l = concat(l, (char*)gf2d_list_get_nth(trackName, tracknum));
+		l = concat(l, ".mp3");
+		music = Mix_LoadMUS(l);
+		trackG = gf2d_list_new();
+		trackR = gf2d_list_new();
+		trackB = gf2d_list_new();
+		loadTrackFromFile((char*)gf2d_list_get_nth(trackName, tracknum));
+		Mix_PlayMusic(music, 1);
 		mode++;
-		break;
-	case 1:
+
+	/*case 1:
 		music = Mix_LoadMUS("music/track2.mp3");
 		track = loadTrackFromFile("track2");
 		Mix_PlayMusic(music, 0);
@@ -230,12 +239,8 @@ void setupLevel(int tracknum)
 		Mix_PlayMusic(music, 0);
 		endtime = SDL_GetTicks() + 62000;
 		mode++;
-		break;
+		break;*/
 
-	default:
-		slog("error on track");
-		break;
-	}
 }
 
 void setupWriteLevel(int tracknum)
@@ -280,6 +285,23 @@ void setupWriteLevel(int tracknum)
 		break;
 	}
 }
+
+void *musicFinished()
+{
+	SaveHighScore();
+
+	gf2d_list_foreach(player, gf2d_entity_free, NULL);
+	gf2d_list_foreach(trackG, gf2d_entity_free, NULL);
+	gf2d_list_foreach(trackR, gf2d_entity_free, NULL);
+	gf2d_list_foreach(trackB, gf2d_entity_free, NULL);
+
+	mode = 0;
+	level = 0;
+	Mix_HaltMusic();
+	score = 0;
+	tracknum = 0;
+}
+
 void Menu()
 {
 	switch (level)
@@ -515,21 +537,10 @@ int main(int argc, char * argv[])
 			printf("Warning: Unable to open game controller! SDL Error: %s\n", SDL_GetError());
 		}
 	}
-	
-	int number_of_buttons;
-	float slider;
-	trackName = gf2d_list_new(10);
+
+	trackName = gf2d_list_new();
 	trackName = loadTrackNameFromFile("TrackName");
 
-	//Shape line = gf2d_shape_edge(0,0, 300,300);
-	//new player system
-	
-	
-	/*
-	Entity *f = (Entity*)gf2d_list_get_nth(player, 0);
-	f->position = vector2d(500, 200);
-	f->body.position = vector2d(500, 200);
-	//gf2d_list_insert(player, f, 0);*/
 	while (SDL_PollEvent(&e) != 0 || !_done)
 	{
 		
@@ -549,12 +560,12 @@ int main(int argc, char * argv[])
 			vector4d_set(colorS, (float)rand() / (float)255, (float)rand() / (float)255, (float)rand() / (float)255, 255);
 			frame = 0;
 		}
-			
 		frame++;
 		// DRAW WORLD
 		Menu();
+
 		gf2d_entity_draw_all();
-		
+		//mode play(1) or write(2)
 		switch (mode)
 		{
 		case 1:
@@ -648,7 +659,8 @@ int main(int argc, char * argv[])
 				{
 					//a green fret
 					slog("hit green button");
-					hitNote(track, (Entity*)gf2d_list_get_nth(player, 0));
+
+					hitNote(trackG, (Entity*)gf2d_list_get_nth(player, 0));
 					HeldG = 1;
 					/* code goes here */
 				}
@@ -656,7 +668,7 @@ int main(int argc, char * argv[])
 				{
 					//b red
 					slog("hit red button");
-					hitNote(track, (Entity*)gf2d_list_get_nth(player, 1));
+					hitNote(trackR, (Entity*)gf2d_list_get_nth(player, 1));
 					HeldR = 1;
 					/* code goes here */
 				}
@@ -664,9 +676,15 @@ int main(int argc, char * argv[])
 				{
 					//x blue
 					slog("hit blue button");
-					hitNote(track, (Entity*)gf2d_list_get_nth(player, 2));
+					hitNote(trackB, (Entity*)gf2d_list_get_nth(player, 2));
 					HeldB = 1;
 					/* code goes here */
+				}
+				if (e.jbutton.button == 6)
+				{
+					musicFinished();
+					//back
+					
 				}
 			}
 			if (e.type == SDL_JOYBUTTONUP)
@@ -675,11 +693,12 @@ int main(int argc, char * argv[])
 				HeldB = 0;
 				HeldR = 0;
 			}
+			//draw Score
 			gf2d_text_draw_line(text, FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 0));
-			gf2d_particle_emitter_update(pe);
-			gf2d_particle_emitter_draw(pe);
-
-			if (SDL_GetTicks() > endtime)
+			//gf2d_particle_emitter_update(pe);
+			//gf2d_particle_emitter_draw(pe);
+			Mix_HookMusicFinished(musicFinished);
+			/*if (SDL_GetTicks() > endtime)
 			{
 				SaveHighScore();
 				mode = 0;
@@ -690,7 +709,7 @@ int main(int argc, char * argv[])
 				tracknum = 0;
 				endtime = 0;
 				gf2d_list_delete(player);
-			}
+			}*/
 			break;
 		case 2:
 			if (e.type == SDL_JOYAXISMOTION)

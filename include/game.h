@@ -42,17 +42,6 @@ void writeTrackToFile(char *filename, List *track);
  */
 void SaveHighScore();
 /**
- * @brief Allows ZXC to create frets and adds to track
- * @param List to where frets will be saved to
- */
-void writeTrack(List *track);
-/**
- * @brief loads from filename position of every fret in filename
- * @param file to load from
- * @return NULL on a List of frets with position
- */
-List *loadTrackFromFile(char *filename);
-/**
  * @brief setup player, frets, music
  * @param tracknum controls which track to load
  */

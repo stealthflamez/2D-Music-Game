@@ -53,7 +53,7 @@ Entity *player_new(Vector2D position)
 //vector3d_set(self->rotation, 64, 64, 0);
 
 	//self->draw = player_draw;
-	self->update = player_update;
+	//self->update = player_update;
 	//self->touch = player_touch;
 
 	self->data = (void*)&playerData;
@@ -62,11 +62,4 @@ Entity *player_new(Vector2D position)
 	//level_add_entity(self);
 	return self;
 
-}
-
-
-
-void player_update(Entity *self)
-{
-	
 }
