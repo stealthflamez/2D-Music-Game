@@ -32,12 +32,6 @@ void hitNoteFX();
  */
 void hitNote(List *track, Entity *player);
 /**
- * @brief Writes position of frets to filename
- * @param file to save to
- * @param List of frets
- */
-void writeTrackToFile(char *filename, List *track);
-/**
  * @brief At the end of song writes highscore to file
  */
 void SaveHighScore();
