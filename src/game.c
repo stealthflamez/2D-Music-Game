@@ -757,7 +757,7 @@ int main(int argc, char * argv[])
 			}
 			if (e.type == SDL_JOYBUTTONDOWN)
 			{
-				if (e.jbutton.button == 0 && HeldG == 0)
+				if (e.jbutton.button == 0 && HeldG == 0 && currentlane != 0)
 				{
 					//a green fret
 					//slog("%f", ((Entity*)gf2d_list_get_nth(player, 0))->position.x);
@@ -773,7 +773,7 @@ int main(int argc, char * argv[])
 					HeldR = 1;
 					/* code goes here */
 				}
-				if (e.jbutton.button == 2 && HeldB == 0)
+				if (e.jbutton.button == 2 && HeldB == 0 && currentlane != 1)
 				{
 					//x blue
 					slog("hit blue button");
