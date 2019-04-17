@@ -123,6 +123,7 @@
     <ClCompile Include="..\..\src\gf2d_windows.c" />
     <ClCompile Include="..\..\src\level.c" />
     <ClCompile Include="..\..\src\player.c" />
+    <ClCompile Include="..\..\src\scratch.c" />
     <ClCompile Include="..\..\src\simple_logger.c" />
     <ClCompile Include="..\..\src\windows_common.c" />
   </ItemGroup>
@@ -159,6 +160,7 @@
     <ClInclude Include="..\..\include\gf2d_vector.h" />
     <ClInclude Include="..\..\include\gf2d_windows.h" />
     <ClInclude Include="..\..\include\player.h" />
+    <ClInclude Include="..\..\include\scratch.h" />
     <ClInclude Include="..\..\include\simple_json.h" />
     <ClInclude Include="..\..\include\simple_logger.h" />
     <ClInclude Include="..\..\include\windows_common.h" />

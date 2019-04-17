@@ -1,0 +1,13 @@
+sprite: images/scratch.png
+frameWidth: 480
+frameHeight: 480
+framesPerLine: 6
+scale: .11,.11
+color: 255,255,255,255
+colorSpecial: 10,255,100,255
+
+action: idle
+startFrame: 0
+endFrame: 60
+frameRate: 1
+type:   loop

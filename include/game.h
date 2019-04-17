@@ -18,7 +18,7 @@
 #include <string.h>
 #include "gf2d_particles.h"
 #include "gf2d_types.h"
-
+#include "scratch.h"
 #include "player.h"
 #include "fret.h"
 /**

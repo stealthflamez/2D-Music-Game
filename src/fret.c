@@ -20,7 +20,7 @@ Entity *fret_new(Vector2D position, Vector4D colorShift)
 	gf2d_line_cpy(self->name, "fret");
 	self->parent = NULL;
 
-	self->shape = gf2d_shape_rect(-25, -20, 50, 50);
+	self->shape = gf2d_shape_rect(-25, -25, 50, 50);
 	gf2d_body_set(
 		&self->body,
 		"fret",

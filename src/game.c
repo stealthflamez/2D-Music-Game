@@ -27,6 +27,8 @@ static int HeldR;
 static int HeldG;
 static int HeldB;
 static int Held;
+static int scratchup;
+static int scratchdown;
 static int turning;
 static int selected;
 static SDL_Event e;
@@ -328,13 +330,13 @@ void Menu()
 					{
 						//slog("down G");
 						turning = 1;
-						selected--;
+						selected++;
 					}
 					else if (e.jaxis.value < -6)
 					{
 						//slog("up G");
 						turning = 1;
-						selected++;
+						selected--;
 					}
 				}
 				else if (e.jaxis.value == -1)
@@ -752,10 +754,56 @@ int main(int argc, char * argv[])
 								currentlane = 2;
 							}
 						}
-					}
+					}/*
+					if (e.jaxis.axis == 1)
+					{
+						if (e.jaxis.value > 6 && HeldG && scratchdown)
+						{
+							slog("down G");
+							scratch_new(((Entity*)gf2d_list_get_nth(player, 0))->position, vector4d(0, 255, 0, 255));
+							scratchup = 1;
+							scratchdown = 0;
+						}
+						else if (e.jaxis.value < -6 && HeldG && scratchup)
+						{
+							slog("up G");
+							scratch_new(((Entity*)gf2d_list_get_nth(player, 0))->position, vector4d(0, 255, 0, 255));
+							scratchup = 0;
+							scratchdown = 1;
+						}
+						if (e.jaxis.value > 6 && HeldR && scratchdown)
+						{
+							slog("down R");
+							scratch_new(((Entity*)gf2d_list_get_nth(player, 1))->position, vector4d(255, 0, 0, 255));
+							scratchup = 1;
+							scratchdown = 0;
+						}
+						else if (e.jaxis.value < -6 && HeldR && scratchup)
+						{
+							slog("up R");
+							scratch_new(((Entity*)gf2d_list_get_nth(player, 1))->position, vector4d(255, 0, 0, 255));
+							scratchup = 0;
+							scratchdown = 1;
+
+						}
+						if (e.jaxis.value > 6 && HeldB && scratchdown)
+						{
+							scratch_new(((Entity*)gf2d_list_get_nth(player, 2))->position, vector4d(0, 0, 255, 255));
+							slog("down B");
+							scratchup = 1;
+							scratchdown = 0;
+						}
+						else if (e.jaxis.value < -6 && HeldB && scratchup)
+						{
+							scratch_new(((Entity*)gf2d_list_get_nth(player, 2))->position, vector4d(0, 0, 255, 255));
+							slog("up B");
+							scratchup = 0;
+							scratchdown = 1;
+						}
+					}*/
 				}
 			}
-			if (e.type == SDL_JOYBUTTONDOWN)
+			else if (e.type == SDL_JOYBUTTONDOWN)
 			{
 				if (e.jbutton.button == 0 && HeldG == 0 && currentlane != 0)
 				{
@@ -793,14 +841,15 @@ int main(int argc, char * argv[])
 					musicFinishedExit();
 					//back
 				}
-				
 			}
-			if (e.type == SDL_JOYBUTTONUP)
+			if (e.jbutton.type == SDL_JOYBUTTONUP)
 			{
 				HeldG = 0;
 				HeldB = 0;
 				HeldR = 0;
 				Held = 0;
+				scratchup = 1;
+				scratchdown = 1;
 			}
 			Mix_HookMusicFinished(musicFinishedWrite);
 		default:
