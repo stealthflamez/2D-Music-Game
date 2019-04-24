@@ -446,6 +446,87 @@ void Menu()
 			HeldR = 0;
 		}
 		break;
+	case 2://add case 2 for default and edit song
+		if (selected > 1)
+			selected = 0;
+		else  if (selected < 0)
+			selected = 1;
+
+		for (int i = 0; i < 2; i++)
+		{
+			if (selected == 0)
+			{
+
+				gf2d_text_draw_line("Default", FT_H1, gf2d_color(255, 0, 255, 255), vector2d(0, 0));
+				gf2d_text_draw_line("Edited Song", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 50));
+			}
+			else if (selected == 1)
+			{
+				gf2d_text_draw_line("Default", FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 0));
+				gf2d_text_draw_line("Edited Song", FT_H1, gf2d_color(255, 0, 255, 255), vector2d(0, 50));
+			}
+		}
+
+		if (e.type == SDL_JOYAXISMOTION)
+		{
+			//Motion on controller 0
+
+			if (e.jaxis.which == 0)
+			{
+				//slog("%i", selected);
+				if (e.jaxis.axis == 1 && turning == 0)
+				{
+					//slog("%i", e.jaxis.value);
+					if (e.jaxis.value > 6)
+					{
+						//slog("down G");
+						turning = 1;
+						selected--;
+					}
+					else if (e.jaxis.value < -6)
+					{
+						//slog("up G");
+						turning = 1;
+						selected++;
+					}
+				}
+				else if (e.jaxis.value == -1)
+				{
+					turning = 0;
+				}
+
+			}
+		}
+		if (e.type == SDL_JOYBUTTONDOWN)
+		{
+			if (e.jbutton.button == 0 && HeldG == 0)
+			{
+				//a green fret
+				//slog("hit green button");
+				level++;
+				if (selected == 0)
+					setupLevel(tracknum);
+				else
+					setupWriteLevel(tracknum);
+				HeldG = 1;
+				/* code goes here */
+			}
+			else if (e.jbutton.button == 1 && HeldR == 0)
+			{
+				//b red
+				//slog("hit red button");
+				level--;
+				selected = 0;
+				HeldR = 1;
+				/* code goes here */
+			}
+		}
+		if (e.type == SDL_JOYBUTTONUP)
+		{
+			HeldG = 0;
+			HeldR = 0;
+		}
+		break;
 	default:
 		break;
 		}
