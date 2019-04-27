@@ -39,7 +39,6 @@ void SaveHighScore();
  * @brief setup player, frets, music
  * @param tracknum controls which track to load
  */
-void setupLevel(int tracknum);
 /**
  * @brief setup player, frets to write to, music
  * @param tracknum controls which track to load
