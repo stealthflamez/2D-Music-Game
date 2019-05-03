@@ -1,6 +1,6 @@
 #include "game.h"
 
-const int JOYSTICK_DEAD_ZONE = 8000;
+const int JOYSTICK_DEAD_ZONE = 20000;
 static int _done = 0;
 static Window *_quit = NULL;
 //UI menu
@@ -20,6 +20,7 @@ static int mode = 0;
 static int endtime = 0;
 static ParticleEmitter *pe;
 static int currentlane;
+static Sprite *flare;
 //
 //controller
 SDL_Joystick* gGameController = NULL;
@@ -47,25 +48,36 @@ char* concat(const char *s1, const char *s2)
 	strcat(result, s2);
 	return result;
 }
-void hitNoteFX(Entity *player)
+void hitNoteFX(Entity *player, Entity*fret)
 {
 	Shape shape;
 	shape = gf2d_shape_circle(0, 0, 8);
+	/*gf2d_sprite_draw(
+		flare,
+		player->body.position,
+		vector2d(100, 100),
+		NULL,
+		NULL,
+		NULL,
+		&player->actor.color,
+		0
+	);*/
+	Color colors = gf2d_color(fret->actor.color.x, fret->actor.color.y, fret->actor.color.z, fret->actor.color.w);
 
 	pe = gf2d_particle_emitter_new_full(
 		10,
-		100,
-		5,
+		1000,
+		0,
 		PT_Sprite,
 		player->body.position,
 		vector2d(2, 2),
-		vector2d(0, -3),
-		vector2d(2, 1),
-		vector2d(0, 0.05),
+		vector2d(0, -2),
+		vector2d(2, -1),
+		vector2d(0, 0.08),
 		vector2d(0, 0.01),
-		gf2d_color(0.85, 0.55, 0, 1),
-		gf2d_color(-0.01, -0.02, 0, 0),
-		gf2d_color(0.1, 0.1, 0, 0.1),
+		colors,
+		gf2d_color(0, 0, 0, 1),
+		gf2d_color(0, 0, 0, 1),
 		&shape,
 		0,
 		1,
@@ -77,8 +89,7 @@ void hitNoteFX(Entity *player)
 		60,
 		//        SDL_BLENDMODE_BLEND);
 		SDL_BLENDMODE_ADD);
-	
-	gf2d_particle_new_default(pe, 20);
+	gf2d_particle_new_default(pe, 10);
 }
 void hitNote(List *track, Entity *player)
 {
@@ -90,7 +101,7 @@ void hitNote(List *track, Entity *player)
 			if (gf2d_body_body_collide(&player->body, &f->body))
 			{
 				slog("hit");
-				hitNoteFX(player);
+				hitNoteFX(player, f);
 				score += 100;
 				itoa(score, buf, 10);
 				text = concat("score: ", buf);
@@ -136,7 +147,7 @@ void SaveHighScore()
 	//fprintf_s(file, "%i\n", score);
 	//fclose(file);
 	FILE *file;
-	char* trackname = concat("HighScore for ", (char*)gf2d_list_get_nth(trackName, selected));
+	char* trackname = concat("HighScore for ", (char*)gf2d_list_get_nth(trackName, tracknum));
 	file = fopen(trackname, "a+");
 	if (!file)
 	{
@@ -468,7 +479,7 @@ int main(int argc, char * argv[])
 {
 	/*variable declarations*/
 	int i;
-	int fullscreen = 1;
+	int fullscreen = 0;
 	Sprite *background = NULL;
 
 	itoa(score, buf, 10);
@@ -511,6 +522,7 @@ int main(int argc, char * argv[])
 		5,
 		false
 	);
+	flare = gf2d_sprite_load_image("images/blue_flare.png");
 
 	SDL_ShowCursor(SDL_DISABLE);
 
@@ -569,7 +581,7 @@ int main(int argc, char * argv[])
 		// DRAW WORLD
 		Menu();
 
-		gf2d_entity_draw_all();
+		
 		//mode play(1) or write(2)
 		switch (mode)
 		{
@@ -691,6 +703,7 @@ int main(int argc, char * argv[])
 				if (e.jbutton.button == 6)
 				{
 					musicFinishedExit();
+					break;
 					//back
 					
 				}
@@ -703,8 +716,8 @@ int main(int argc, char * argv[])
 			}
 			//draw Score
 			gf2d_text_draw_line(text, FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 0));
-			//gf2d_particle_emitter_update(pe);
-			//gf2d_particle_emitter_draw(pe);
+			gf2d_particle_emitter_update(pe);
+			gf2d_particle_emitter_draw(pe);
 			Mix_HookMusicFinished(musicFinished);
 			/*if (SDL_GetTicks() > endtime)
 			{
@@ -876,7 +889,8 @@ int main(int argc, char * argv[])
 		}
 
 		//line to each note
-		
+		gf2d_entity_draw_all();
+
 		gf2d_entity_update_all();
 		
 	
