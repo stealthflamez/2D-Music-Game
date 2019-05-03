@@ -149,4 +149,6 @@ void gf2d_particle_new_default(
         ParticleEmitter *pe,
         Uint32   count);
 
+void myUpdate(ParticleEmitter *pe, Vector2D position, Color color);
+
 #endif

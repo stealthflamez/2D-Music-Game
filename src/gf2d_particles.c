@@ -387,5 +387,9 @@ void gf2d_particle_update(Particle *p,Uint32 now)
         if (p->frame > p->endFrame)p->frame = p->startFrame;
     }
 }
-
+void myUpdate(ParticleEmitter *pe, Vector2D position, Color color)
+{
+	pe->position = position;
+	pe->color = color;
+}
 /*eol@eof*/

@@ -37,8 +37,12 @@ static SDL_Event e;
 
 //score
 char* text;
+char* streakT;
+char* multi;
 char buf[33];
 int score;
+int multiplier;
+int streak;
 //
 char* concat(const char *s1, const char *s2)
 {
@@ -50,8 +54,6 @@ char* concat(const char *s1, const char *s2)
 }
 void hitNoteFX(Entity *player, Entity*fret)
 {
-	Shape shape;
-	shape = gf2d_shape_circle(0, 0, 8);
 	/*gf2d_sprite_draw(
 		flare,
 		player->body.position,
@@ -62,33 +64,7 @@ void hitNoteFX(Entity *player, Entity*fret)
 		&player->actor.color,
 		0
 	);*/
-	Color colors = gf2d_color(fret->actor.color.x, fret->actor.color.y, fret->actor.color.z, fret->actor.color.w);
-
-	pe = gf2d_particle_emitter_new_full(
-		10,
-		1000,
-		0,
-		PT_Sprite,
-		player->body.position,
-		vector2d(2, 2),
-		vector2d(0, -2),
-		vector2d(2, -1),
-		vector2d(0, 0.08),
-		vector2d(0, 0.01),
-		colors,
-		gf2d_color(0, 0, 0, 1),
-		gf2d_color(0, 0, 0, 1),
-		&shape,
-		0,
-		1,
-		1,
-		"images/flameP.png",
-		81,
-		123,
-		80,
-		60,
-		//        SDL_BLENDMODE_BLEND);
-		SDL_BLENDMODE_ADD);
+	myUpdate(pe, player->position, gf2d_color(fret->actor.color.x, fret->actor.color.y, fret->actor.color.z, fret->actor.color.w));
 	gf2d_particle_new_default(pe, 10);
 }
 void hitNote(List *track, Entity *player)
@@ -102,9 +78,21 @@ void hitNote(List *track, Entity *player)
 			{
 				slog("hit");
 				hitNoteFX(player, f);
-				score += 100;
+				streak += 1;
+				if (streak < 40)
+					multiplier = (streak / 10) + 1;
+
+				score += 100 * multiplier;
+
 				itoa(score, buf, 10);
-				text = concat("score: ", buf);
+				text = concat("Score: ", buf);
+
+				itoa(streak, buf, 10);
+				streakT = concat("Streak: ", buf);
+
+				itoa(multiplier, buf, 10);
+				multi = concat("multiplier: ", buf);
+
 				gf2d_entity_free(track->elements[i].data);
 				gf2d_list_delete_nth(track, i);
 				break;
@@ -481,6 +469,7 @@ int main(int argc, char * argv[])
 	int i;
 	int fullscreen = 0;
 	Sprite *background = NULL;
+	Sprite *Ricardo = NULL;
 
 	itoa(score, buf, 10);
 	text = concat("score: ", buf);
@@ -522,11 +511,47 @@ int main(int argc, char * argv[])
 		5,
 		false
 	);
+	Ricardo = gf2d_sprite_load_all(
+		"images/backgrounds/grey ricardo.png",
+		600,
+		338,
+		10,
+		false
+	);
 	flare = gf2d_sprite_load_image("images/blue_flare.png");
 
 	SDL_ShowCursor(SDL_DISABLE);
 
 	// init mouse, editor window
+
+	Shape shape;
+	shape = gf2d_shape_circle(0, 0, 8);
+	pe = gf2d_particle_emitter_new_full(
+		1000,
+		500,
+		0,
+		PT_Sprite,
+		vector2d(2, 2),
+		vector2d(2, 2),
+		vector2d(0, -2),
+		vector2d(2, -1),
+		vector2d(0, 0.08),
+		vector2d(0, 0.01),
+		gf2d_color(0, 0, 0, 1),
+		gf2d_color(0, 0, 0, 1),
+		gf2d_color(0, 0, 0, 1),
+		&shape,
+		0,
+		1,
+		1,
+		"images/flameP.png",
+		81,
+		123,
+		80,
+		60,
+		//        SDL_BLENDMODE_BLEND);
+		SDL_BLENDMODE_ADD);
+
 	gf2d_mouse_load("actors/mouse.actor");
 	int frame = 0;
 	int loop = 80;
@@ -571,8 +596,17 @@ int main(int argc, char * argv[])
 		// all drawing should happen betweem clear_screen and next_frame
 			//backgrounds drawn first
 		
+		/*
 		gf2d_sprite_draw(background, vector2d(600, 350), scale, scaleC, NULL, NULL, &colorS, (frame / 3) % 80);
 		if (frame > 240)
+		{
+			vector4d_set(colorS, (float)rand() / (float)255, (float)rand() / (float)255, (float)rand() / (float)255, 255);
+			frame = 0;
+		}
+		frame++;
+*/
+		gf2d_sprite_draw(Ricardo, vector2d(600, 350), scale, scaleC, NULL, NULL, &colorS, (frame / 4) % 201);
+		if (frame > 804)
 		{
 			vector4d_set(colorS, (float)rand() / (float)255, (float)rand() / (float)255, (float)rand() / (float)255, 255);
 			frame = 0;
@@ -716,6 +750,8 @@ int main(int argc, char * argv[])
 			}
 			//draw Score
 			gf2d_text_draw_line(text, FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 0));
+			gf2d_text_draw_line(streakT, FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 50));
+			gf2d_text_draw_line(multi, FT_H1, gf2d_color(255, 255, 255, 255), vector2d(0, 100));
 			gf2d_particle_emitter_update(pe);
 			gf2d_particle_emitter_draw(pe);
 			Mix_HookMusicFinished(musicFinished);
