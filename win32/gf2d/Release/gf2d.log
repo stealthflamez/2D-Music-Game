@@ -7,37 +7,35 @@ c:\users\jeffa\desktop\2d-music-game\src\game.c(90): warning C4996: 'itoa': The 
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdlib.h(1334): note: see declaration of 'itoa'
 c:\users\jeffa\desktop\2d-music-game\src\game.c(93): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdlib.h(1334): note: see declaration of 'itoa'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(112): warning C4033: 'writeTrackToFile' must return a value
-c:\users\jeffa\desktop\2d-music-game\src\game.c(114): warning C4018: '<': signed/unsigned mismatch
-c:\users\jeffa\desktop\2d-music-game\src\game.c(161): warning C4033: 'loadTrackFromFile' must return a value
-c:\users\jeffa\desktop\2d-music-game\src\game.c(157): warning C4101: 'i': unreferenced local variable
-c:\users\jeffa\desktop\2d-music-game\src\game.c(193): warning C4047: 'function': 'char *' differs in levels of indirection from 'TextLine (*)'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(193): warning C4024: '_slog': different types for formal and actual parameter 3
-c:\users\jeffa\desktop\2d-music-game\src\game.c(191): warning C4996: 'strdup': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strdup. See online help for details.
+c:\users\jeffa\desktop\2d-music-game\src\game.c(113): warning C4033: 'writeTrackToFile' must return a value
+c:\users\jeffa\desktop\2d-music-game\src\game.c(115): warning C4018: '<': signed/unsigned mismatch
+c:\users\jeffa\desktop\2d-music-game\src\game.c(162): warning C4033: 'loadTrackFromFile' must return a value
+c:\users\jeffa\desktop\2d-music-game\src\game.c(158): warning C4101: 'i': unreferenced local variable
+c:\users\jeffa\desktop\2d-music-game\src\game.c(194): warning C4047: 'function': 'char *' differs in levels of indirection from 'TextLine (*)'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(194): warning C4024: '_slog': different types for formal and actual parameter 3
+c:\users\jeffa\desktop\2d-music-game\src\game.c(192): warning C4996: 'strdup': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strdup. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\string.h(538): note: see declaration of 'strdup'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(258): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(259): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(260): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(261): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(272): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(273): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(274): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(275): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(276): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(290): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
 c:\users\jeffa\desktop\2d-music-game\src\game.c(291): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(311): warning C4018: '<': signed/unsigned mismatch
-c:\users\jeffa\desktop\2d-music-game\src\game.c(506): warning C4013: 'camera_set_dimensions' undefined; assuming extern returning int
-c:\users\jeffa\desktop\2d-music-game\src\game.c(757): warning C4113: 'void *(__cdecl *)()' differs in parameter lists from 'void (__cdecl *)(void)'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(757): warning C4047: 'function': 'void (__cdecl *)(void)' differs in levels of indirection from 'void *(__cdecl *)()'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(757): warning C4024: 'Mix_HookMusicFinished': different types for formal and actual parameter 1
-c:\users\jeffa\desktop\2d-music-game\src\game.c(922): warning C4113: 'void *(__cdecl *)()' differs in parameter lists from 'void (__cdecl *)(void)'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(922): warning C4047: 'function': 'void (__cdecl *)(void)' differs in levels of indirection from 'void *(__cdecl *)()'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(922): warning C4024: 'Mix_HookMusicFinished': different types for formal and actual parameter 1
-c:\users\jeffa\desktop\2d-music-game\src\game.c(474): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdlib.h(1334): note: see declaration of 'itoa'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(292): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(293): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(294): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(311): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(312): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(313): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(314): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(315): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(335): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(336): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(356): warning C4018: '<': signed/unsigned mismatch
+c:\users\jeffa\desktop\2d-music-game\src\game.c(551): warning C4013: 'camera_set_dimensions' undefined; assuming extern returning int
+c:\users\jeffa\desktop\2d-music-game\src\game.c(772): warning C4113: 'void *(__cdecl *)()' differs in parameter lists from 'void (__cdecl *)(void)'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(772): warning C4047: 'function': 'void (__cdecl *)(void)' differs in levels of indirection from 'void *(__cdecl *)()'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(772): warning C4024: 'Mix_HookMusicFinished': different types for formal and actual parameter 1
+c:\users\jeffa\desktop\2d-music-game\src\game.c(925): warning C4113: 'void *(__cdecl *)()' differs in parameter lists from 'void (__cdecl *)(void)'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(925): warning C4047: 'function': 'void (__cdecl *)(void)' differs in levels of indirection from 'void *(__cdecl *)()'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(925): warning C4024: 'Mix_HookMusicFinished': different types for formal and actual parameter 1
   Generating code
-  1 of 249 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
+  0 of 248 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code

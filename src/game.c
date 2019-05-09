@@ -36,13 +36,13 @@ static SDL_Event e;
 //
 
 //score
-char* text;
-char* streakT;
-char* multi;
-char buf[33];
-int score;
-int multiplier;
-int streak;
+static char* text = "Score: ";
+static char* streakT = "Streak: ";
+static char* multi = "Multiplier: ";
+static char buf[33];
+static int Tscore;
+static int multiplier;
+static int streak;
 //
 char* concat(const char *s1, const char *s2)
 {
@@ -82,9 +82,9 @@ void hitNote(List *track, Entity *player)
 				if (streak < 40)
 					multiplier = (streak / 10) + 1;
 
-				score += 100 * multiplier;
+				Tscore += 100 * multiplier;
 
-				itoa(score, buf, 10);
+				itoa(Tscore, buf, 10);
 				text = concat("Score: ", buf);
 
 				itoa(streak, buf, 10);
@@ -95,10 +95,11 @@ void hitNote(List *track, Entity *player)
 
 				gf2d_entity_free(track->elements[i].data);
 				gf2d_list_delete_nth(track, i);
-				break;
+				return;
 			}
 		}
-		
+		streak = 0;
+		multiplier = 0;
 }
 //done 
 void *writeTrackToFile(char *filename)
@@ -208,10 +209,42 @@ List *loadTrackNameFromFile(char *filename)
 
 void setupLevel(int tracknum, int d)
 {
+
+	//Shape shape;
+	//shape = gf2d_shape_circle(0, 0, 8);
+
+
 	player = gf2d_list_new_size(3);
 	player = gf2d_list_append(player, player_new(vector2d(500, 650)));
 	player = gf2d_list_append(player, player_new(vector2d(600, 650)));
 	player = gf2d_list_append(player, player_new(vector2d(700, 650)));
+
+	pe = gf2d_particle_emitter_new_full(
+		10000,
+		100,
+		5,
+		PT_Sprite,
+		vector2d(2, 2),
+		vector2d(2, 2),
+		vector2d(0, -2),
+		vector2d(2, -1),
+		vector2d(0, 0.08),
+		vector2d(0, 0.01),
+		gf2d_color(0, 0, 0, 1),
+		gf2d_color(0, 0, 0, 1),
+		gf2d_color(0, 0, 0, 1),
+		NULL,
+		0,
+		1,
+		1,
+		"images/flameP.png",
+		81,
+		123,
+		80,
+		60,
+		//        SDL_BLENDMODE_BLEND);
+		SDL_BLENDMODE_ADD);
+
 	SDL_PumpEvents();
 	SDL_FlushEvent(e.type);
 	char *l;
@@ -259,11 +292,17 @@ void *musicFinished()
 	gf2d_list_foreach(trackG, gf2d_entity_free, NULL);
 	gf2d_list_foreach(trackR, gf2d_entity_free, NULL);
 	gf2d_list_foreach(trackB, gf2d_entity_free, NULL);
+	gf2d_particle_emitter_free(pe);
+	text = "Score: ";
+	streakT = "Streak: ";
+	multi = "Multiplier: ";
+	multiplier = 0;
+	streak = 0;
 	selected = 0;
 	tracknum = 0;
 	mode = 0;
 	level = 0;
-	score = 0;
+	Tscore = 0;
 }
 
 void *musicFinishedExit()
@@ -274,12 +313,18 @@ void *musicFinishedExit()
 	gf2d_list_foreach(trackR, gf2d_entity_free, NULL);
 	gf2d_list_foreach(trackB, gf2d_entity_free, NULL);
 	gf2d_list_foreach(track, gf2d_entity_free, NULL);
+	gf2d_particle_emitter_free(pe);
+	text = "Score: ";
+	streakT = "Streak: ";
+	multi = "Multiplier: ";
+	multiplier = 0;
+	streak = 0;
 	tracknum = 0;
 	selected = 0;
 	mode = 0;
 	level = 0;
 	Mix_PauseMusic();
-	score = 0;
+	Tscore = 0;
 	
 }
 
@@ -470,10 +515,10 @@ int main(int argc, char * argv[])
 	int fullscreen = 0;
 	Sprite *background = NULL;
 	Sprite *Ricardo = NULL;
-
+/*
 	itoa(score, buf, 10);
 	text = concat("score: ", buf);
-
+*/
 	//basic setup
 	/*parse args*/
 	for (i = 1; i < argc; i++)
@@ -518,39 +563,9 @@ int main(int argc, char * argv[])
 		10,
 		false
 	);
-	flare = gf2d_sprite_load_image("images/blue_flare.png");
-
 	SDL_ShowCursor(SDL_DISABLE);
 
 	// init mouse, editor window
-
-	Shape shape;
-	shape = gf2d_shape_circle(0, 0, 8);
-	pe = gf2d_particle_emitter_new_full(
-		1000,
-		500,
-		0,
-		PT_Sprite,
-		vector2d(2, 2),
-		vector2d(2, 2),
-		vector2d(0, -2),
-		vector2d(2, -1),
-		vector2d(0, 0.08),
-		vector2d(0, 0.01),
-		gf2d_color(0, 0, 0, 1),
-		gf2d_color(0, 0, 0, 1),
-		gf2d_color(0, 0, 0, 1),
-		&shape,
-		0,
-		1,
-		1,
-		"images/flameP.png",
-		81,
-		123,
-		80,
-		60,
-		//        SDL_BLENDMODE_BLEND);
-		SDL_BLENDMODE_ADD);
 
 	gf2d_mouse_load("actors/mouse.actor");
 	int frame = 0;
@@ -709,7 +724,7 @@ int main(int argc, char * argv[])
 			}
 			if (e.type == SDL_JOYBUTTONDOWN)
 			{
-				if (e.jbutton.button == 0 && HeldG == 0)
+				if (e.jbutton.button == 0 && HeldG == 0 && currentlane != 0)
 				{
 					//a green fret
 					slog("hit green button");
@@ -726,7 +741,7 @@ int main(int argc, char * argv[])
 					HeldR = 1;
 					/* code goes here */
 				}
-				if (e.jbutton.button == 2 && HeldB == 0)
+				if (e.jbutton.button == 2 && HeldB == 0 && currentlane != 1)
 				{
 					//x blue
 					slog("hit blue button");
@@ -755,18 +770,6 @@ int main(int argc, char * argv[])
 			gf2d_particle_emitter_update(pe);
 			gf2d_particle_emitter_draw(pe);
 			Mix_HookMusicFinished(musicFinished);
-			/*if (SDL_GetTicks() > endtime)
-			{
-				SaveHighScore();
-				mode = 0;
-				level = 0;
-				Mix_HaltMusic();
-				Mix_FreeMusic(music);
-				score = 0;
-				tracknum = 0;
-				endtime = 0;
-				gf2d_list_delete(player);
-			}*/
 			break;
 		case 2:
 			if (e.type == SDL_JOYAXISMOTION)
