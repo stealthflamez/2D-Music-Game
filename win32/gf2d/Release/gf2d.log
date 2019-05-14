@@ -15,27 +15,29 @@ c:\users\jeffa\desktop\2d-music-game\src\game.c(194): warning C4047: 'function':
 c:\users\jeffa\desktop\2d-music-game\src\game.c(194): warning C4024: '_slog': different types for formal and actual parameter 3
 c:\users\jeffa\desktop\2d-music-game\src\game.c(192): warning C4996: 'strdup': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strdup. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\string.h(538): note: see declaration of 'strdup'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(291): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
 c:\users\jeffa\desktop\2d-music-game\src\game.c(292): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
 c:\users\jeffa\desktop\2d-music-game\src\game.c(293): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
 c:\users\jeffa\desktop\2d-music-game\src\game.c(294): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(311): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(312): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(313): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(314): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(295): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
 c:\users\jeffa\desktop\2d-music-game\src\game.c(315): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(335): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(336): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(356): warning C4018: '<': signed/unsigned mismatch
-c:\users\jeffa\desktop\2d-music-game\src\game.c(551): warning C4013: 'camera_set_dimensions' undefined; assuming extern returning int
-c:\users\jeffa\desktop\2d-music-game\src\game.c(772): warning C4113: 'void *(__cdecl *)()' differs in parameter lists from 'void (__cdecl *)(void)'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(772): warning C4047: 'function': 'void (__cdecl *)(void)' differs in levels of indirection from 'void *(__cdecl *)()'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(772): warning C4024: 'Mix_HookMusicFinished': different types for formal and actual parameter 1
-c:\users\jeffa\desktop\2d-music-game\src\game.c(925): warning C4113: 'void *(__cdecl *)()' differs in parameter lists from 'void (__cdecl *)(void)'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(925): warning C4047: 'function': 'void (__cdecl *)(void)' differs in levels of indirection from 'void *(__cdecl *)()'
-c:\users\jeffa\desktop\2d-music-game\src\game.c(925): warning C4024: 'Mix_HookMusicFinished': different types for formal and actual parameter 1
+c:\users\jeffa\desktop\2d-music-game\src\game.c(316): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(317): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(318): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(319): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(341): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(342): warning C4113: 'void (__cdecl *)(Entity *)' differs in parameter lists from 'void (__cdecl *)(void *,void *)'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(362): warning C4018: '<': signed/unsigned mismatch
+c:\users\jeffa\desktop\2d-music-game\src\game.c(557): warning C4013: 'camera_set_dimensions' undefined; assuming extern returning int
+c:\users\jeffa\desktop\2d-music-game\src\game.c(778): warning C4113: 'void *(__cdecl *)()' differs in parameter lists from 'void (__cdecl *)(void)'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(778): warning C4047: 'function': 'void (__cdecl *)(void)' differs in levels of indirection from 'void *(__cdecl *)()'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(778): warning C4024: 'Mix_HookMusicFinished': different types for formal and actual parameter 1
+c:\users\jeffa\desktop\2d-music-game\src\game.c(931): warning C4113: 'void *(__cdecl *)()' differs in parameter lists from 'void (__cdecl *)(void)'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(931): warning C4047: 'function': 'void (__cdecl *)(void)' differs in levels of indirection from 'void *(__cdecl *)()'
+c:\users\jeffa\desktop\2d-music-game\src\game.c(931): warning C4024: 'Mix_HookMusicFinished': different types for formal and actual parameter 1
   Generating code
-  0 of 248 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+c:\users\jeffa\desktop\2d-music-game\src\game.c(336): warning C4716: 'musicFinishedExit': must return a value
+c:\users\jeffa\desktop\2d-music-game\src\game.c(310): warning C4716: 'musicFinished': must return a value
+  3 of 248 functions ( 1.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code

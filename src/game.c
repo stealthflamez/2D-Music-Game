@@ -220,8 +220,8 @@ void setupLevel(int tracknum, int d)
 	player = gf2d_list_append(player, player_new(vector2d(700, 650)));
 
 	pe = gf2d_particle_emitter_new_full(
-		10000,
-		100,
+		5000,
+		10,
 		5,
 		PT_Sprite,
 		vector2d(2, 2),
@@ -252,14 +252,15 @@ void setupLevel(int tracknum, int d)
 	
 	l = concat("music", "/");
 	l = concat(l, (char*)gf2d_list_get_nth(trackName, tracknum));
-	if (d == 1)
-		l = concat(l, " W");
 	l = concat(l, ".mp3");
 	music = Mix_LoadMUS(l);
 	trackG = gf2d_list_new();
 	trackR = gf2d_list_new();
 	trackB = gf2d_list_new();
-	loadTrackFromFile((char*)gf2d_list_get_nth(trackName, tracknum));
+	if (d == 0)
+		loadTrackFromFile((char*)gf2d_list_get_nth(trackName, tracknum));
+	else
+		loadTrackFromFile(concat((char*)gf2d_list_get_nth(trackName, tracknum), " W"));
 	Mix_PlayMusic(music, 1);
 	mode++;
 }
@@ -292,7 +293,10 @@ void *musicFinished()
 	gf2d_list_foreach(trackG, gf2d_entity_free, NULL);
 	gf2d_list_foreach(trackR, gf2d_entity_free, NULL);
 	gf2d_list_foreach(trackB, gf2d_entity_free, NULL);
-	gf2d_particle_emitter_free(pe);
+	if (pe != NULL) {
+		gf2d_particle_emitter_free(pe);
+		pe = NULL;
+	}
 	text = "Score: ";
 	streakT = "Streak: ";
 	multi = "Multiplier: ";
@@ -313,7 +317,10 @@ void *musicFinishedExit()
 	gf2d_list_foreach(trackR, gf2d_entity_free, NULL);
 	gf2d_list_foreach(trackB, gf2d_entity_free, NULL);
 	gf2d_list_foreach(track, gf2d_entity_free, NULL);
-	gf2d_particle_emitter_free(pe);
+	if (pe != NULL) {
+		gf2d_particle_emitter_free(pe);
+		pe = NULL;
+	}
 	text = "Score: ";
 	streakT = "Streak: ";
 	multi = "Multiplier: ";
@@ -330,8 +337,7 @@ void *musicFinishedExit()
 
 void *musicFinishedWrite()
 {
-	
-	writeTrackToFile((char*)gf2d_list_get_nth(trackName, tracknum));
+	writeTrackToFile(concat((char*)gf2d_list_get_nth(trackName, tracknum), " W"));
 	gf2d_list_foreach(player, gf2d_entity_free, NULL);
 	gf2d_list_foreach(track, gf2d_entity_free, NULL);
 	tracknum = 0;
@@ -611,7 +617,7 @@ int main(int argc, char * argv[])
 		// all drawing should happen betweem clear_screen and next_frame
 			//backgrounds drawn first
 		
-		/*
+		
 		gf2d_sprite_draw(background, vector2d(600, 350), scale, scaleC, NULL, NULL, &colorS, (frame / 3) % 80);
 		if (frame > 240)
 		{
@@ -619,14 +625,14 @@ int main(int argc, char * argv[])
 			frame = 0;
 		}
 		frame++;
-*/
-		gf2d_sprite_draw(Ricardo, vector2d(600, 350), scale, scaleC, NULL, NULL, &colorS, (frame / 4) % 201);
-		if (frame > 804)
-		{
-			vector4d_set(colorS, (float)rand() / (float)255, (float)rand() / (float)255, (float)rand() / (float)255, 255);
-			frame = 0;
-		}
-		frame++;
+
+		//gf2d_sprite_draw(Ricardo, vector2d(600, 350), scale, scaleC, NULL, NULL, &colorS, (frame / 4) % 201);
+		//if (frame > 804)
+		//{
+		//	vector4d_set(colorS, (float)rand() / (float)255, (float)rand() / (float)255, (float)rand() / (float)255, 255);
+		//	frame = 0;
+		//}
+		//frame++;
 		// DRAW WORLD
 		Menu();
 
@@ -903,7 +909,7 @@ int main(int argc, char * argv[])
 				if (e.jbutton.button == 7 && Held == 0)
 				{
 					//start
-					writeTrackToFile((char*)gf2d_list_get_nth(trackName, tracknum));
+					writeTrackToFile(concat((char*)gf2d_list_get_nth(trackName, tracknum), " W"));
 					Held = 1;
 					break;
 				}
